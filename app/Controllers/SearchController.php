@@ -1158,7 +1158,7 @@ class SearchController extends BaseController
                img_7, img_8, img_9, img_10, prod_desc, hot_sale, tbl_name, search_brand, 
                weight, weight_units, quantity, specifications, flag
         FROM tbl_products
-        WHERE flag = 1 AND `hot_sale` =  1
+        WHERE  (hot_sale = 1 OR offer_type = 0) AND flag = 1 
         " . $this->buildAdditionalConditions($minPrice, $maxPrice, $available, $brand, 'tbl_products', $discount, $discount_mob) . "
         UNION ALL
         SELECT prod_id, access_id AS brand_id, sub_access_id AS modal_id, product_name, 
@@ -1168,7 +1168,7 @@ class SearchController extends BaseController
                hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
                specifications, flag
         FROM tbl_accessories_list
-        WHERE flag = 1 AND `hot_sale` =  1
+        WHERE  (hot_sale = 1 OR offer_type = 0) AND flag = 1 
         " . $this->buildAdditionalConditions($minPrice, $maxPrice, $available, $brand, 'tbl_accessories_list', $discount, $discount_mob) . "
         UNION ALL
         SELECT prod_id, r_menu_id AS brand_id, r_sub_id AS modal_id, product_name, 
@@ -1178,7 +1178,7 @@ class SearchController extends BaseController
                hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
                specifications, flag
         FROM tbl_rproduct_list
-        WHERE flag = 1 AND `hot_sale` =  1
+        WHERE  (hot_sale = 1 OR offer_type = 0) AND flag = 1 
         " . $this->buildAdditionalConditions($minPrice, $maxPrice, $available, $brand, 'tbl_rproduct_list', $discount, $discount_mob) . "
         UNION ALL
         SELECT prod_id, h_menu_id AS brand_id, h_submenu_id AS modal_id, product_name, 
@@ -1188,7 +1188,7 @@ class SearchController extends BaseController
                hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
                specifications, flag
         FROM tbl_helmet_products
-        WHERE flag = 1 AND `hot_sale` =  1
+        WHERE  (hot_sale = 1 OR offer_type = 0) AND flag = 1 
         " . $this->buildAdditionalConditions($minPrice, $maxPrice, $available, $brand, 'tbl_helmet_products', $discount, $discount_mob) . "
         UNION ALL
         SELECT prod_id, lug_menu_id AS brand_id, lug_submenu_id AS modal_id, product_name, 
@@ -1198,7 +1198,7 @@ class SearchController extends BaseController
                hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
                specifications, flag
         FROM tbl_luggagee_products
-        WHERE flag = 1 AND `hot_sale` =  1
+        WHERE  (hot_sale = 1 OR offer_type = 0) AND flag = 1 
         " . $this->buildAdditionalConditions($minPrice, $maxPrice, $available, $brand, 'tbl_luggagee_products', $discount, $discount_mob) . "
         UNION ALL
         SELECT prod_id, camp_menu_id AS brand_id, c_submenu_id AS modal_id, product_name, 
@@ -1208,7 +1208,7 @@ class SearchController extends BaseController
                hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
                specifications, flag
         FROM tbl_camping_products
-        WHERE flag = 1 AND `hot_sale` =  1
+        WHERE  (hot_sale = 1 OR offer_type = 0) AND flag = 1 
         " . $this->buildAdditionalConditions($minPrice, $maxPrice, $available, $brand, 'tbl_camping_products', $discount, $discount_mob) . "
     ";
 
@@ -1248,7 +1248,7 @@ class SearchController extends BaseController
 
 
         $totalDatas = $db->query($query)->getResultArray();
-
+      
 
         // Pagination Settings
         $perPage = 12;

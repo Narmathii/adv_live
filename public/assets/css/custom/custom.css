@@ -2,6 +2,14 @@
   font-family: "poppins";
 } */
 
+.de_form {
+  height: 60%;
+  min-height: 0;
+  max-height: 600px;
+
+  overflow-y: auto;
+}
+
 @media (min-width: 1200px) {
   .col-xl-12 {
     -webkit-box-flex: 0;
@@ -6370,25 +6378,21 @@ a.youtube::before{
   color: var(--color) !important;
 }
 
-
 .clear-filter-container {
-    justify-content: space-between;
-    padding: 10px;
-
+  justify-content: space-between;
+  padding: 10px;
 }
 
-.clear-filter-container>a {
-    background-color: #829B2F;
-    color: #fff !important;
-    font-family: 'poppins';
+.clear-filter-container > a {
+  background-color: #829b2f;
+  color: #fff !important;
+  font-family: "poppins";
+  border-radius: 20px;
+}
+
+@media screen and (max-width: 767px) {
+  .clear-filter-container > a {
     border-radius: 20px;
-
+    height: 35px;
+  }
 }
-
-@media screen and (max-width : 767px) {
-    .clear-filter-container>a {
-        border-radius: 20px;
-        height: 35px
-    }
-}
-
