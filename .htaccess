@@ -1,0 +1,94 @@
+# Disable directory browsing
+Options -Indexes
+
+# ----------------------------------------------------------------------
+# Enable CORS
+# ----------------------------------------------------------------------
+# Redirect non-www to www
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirect www to non-www
+    RewriteCond %{HTTP_HOST} ^www\.adventureshoppe\.com$ [NC]
+    RewriteRule ^(.*)$ https://adventureshoppe.com/$1 [L,R=301]
+</IfModule>
+
+<IfModule mod_headers.c>
+    # Allow cross-origin requests for both the non-www and www versions of the site
+    SetEnvIf Origin "https://(www\.)?adventureshoppe\.com" AccessControlAllowOrigin=$0
+
+    # Set the headers for CORS
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+    
+    # Handle OPTIONS preflight request (for browsers to check CORS permissions)
+    Header set Access-Control-Allow-Origin "%{AccessControlAllowOrigin}e" env=AccessControlAllowOrigin
+</IfModule>
+
+# Handle preflight (OPTIONS) requests
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ $1 [R=200,END]
+</IfModule>
+
+
+# ----------------------------------------------------------------------
+# Rewrite engine for CodeIgniter
+# ----------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+    Options +FollowSymlinks
+    RewriteEngine On
+
+    # RewriteBase (Uncomment and set if CodeIgniter is in a subdirectory)
+    # RewriteBase /your-subdirectory
+
+    # Redirect Trailing Slashes...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Rewrite "www.example.com -> example.com"
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
+
+    # Handle all requests through index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^([\s\S]*)$ index.php/$1 [L,NC,QSA]
+
+    # Ensure Authorization header is passed
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+    # If mod_rewrite isn't installed, all 404's are sent to index.php
+    ErrorDocument 404 index.php
+</IfModule>
+
+# ----------------------------------------------------------------------
+# Security and Performance
+# ----------------------------------------------------------------------
+
+# Disable server signature
+ServerSignature Off
+
+# Disable directory listing
+Options -Indexes
+
+# Set cache control headers
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access 1 year"
+    ExpiresByType image/jpeg "access 1 year"
+    ExpiresByType image/gif "access 1 year"
+    ExpiresByType image/png "access 1 year"
+    ExpiresByType text/css "access 1 month"
+    ExpiresByType application/javascript "access 1 month"
+    ExpiresByType text/javascript "access 1 month"
+    ExpiresByType text/html "access 1 day"
+    ExpiresByType application/pdf "access 1 month"
+    ExpiresByType application/x-javascript "access 1 month"
+</IfModule>

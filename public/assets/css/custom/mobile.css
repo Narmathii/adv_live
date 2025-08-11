@@ -1,0 +1,299 @@
+/* For Samsung */
+@media only screen and (max-width: 361px) {
+  address.s1 span {
+    background: none;
+    margin: 0;
+    padding: 0;
+    font-size: 14px !important;
+    line-height: 1.7em;
+    margin-bottom: 5px;
+  }
+  #burger {
+    position: fixed;
+    top: 4.3%;
+  }
+  .burger {
+    width: 22px;
+  }
+  .brand img {
+    margin-left: 15px;
+    height: 40px !important;
+    width: 80px !important;
+    margin-right: 12px;
+    margin-bottom: 10px;
+  }
+
+  /* .products_wrapper > .offer {
+    width: 35px !important;
+    height: 35px !important;
+    left:21px !important
+  } */
+  /* .offer {
+    position: absolute;
+    top: 4px !important;
+    left: 4px !important;
+    width: 30px;
+    height: 30px;
+    font-size: 10px !important;
+  } */
+  #section-newArrival .de-item {
+    min-height: 240px !important;
+  }
+  .new-arrival .de-item .d-info {
+    height: 193px !important;
+  }
+
+  .buynow_btn {
+    height: 30px !important;
+    font-size: 13px !important;
+  }
+
+  #section-newArrival .de-item h4 {
+    font-size: 11px !important;
+  }
+  .share-btn {
+    position: absolute;
+    top: 15% !important;
+    z-index: 99;
+    color: #fff !important;
+    right: 10% !important;
+    background: #85a229;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+      0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    border-radius: 50%;
+    font-size: 17px;
+  }
+  .form-check-input {
+    margin-top: 1px;
+    z-index: 99;
+    margin-left: 1% !important;
+  }
+  .ms-2 {
+    margin-left: 2.5rem !important;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .add-address {
+    right: 17px;
+    top: 52px;
+    left: inherit !important;
+  }
+  .cartlist-container {
+    padding: 75px 10px !important;
+  }
+}
+/* @media only screen and (max-width: 1441px) {
+  
+} */
+
+/* Mobile (Landscape) and small phones */
+@media only screen and (min-width: 425px) and (max-width: 767px) {
+  #section-newArrival .owl-carousel.owl-drag .owl-item {
+    /* padding-left: 15px; */
+    padding: 3px !important;
+  }
+  #section-offers h2,
+  #section-newArrival h2,
+  #section-brands h2,
+  #section-helmets h2,
+  #social_media h2,
+  #section-hotsale h2 {
+    font-size: 19px;
+  }
+
+  .share-btn {
+    top: 15%;
+    right: 9%;
+  }
+
+  .block-with-text p {
+    overflow: auto !important;
+  }
+
+  .nav-desc > p,
+  .nav-desc > p strong,
+  .nav-desc > ul > li strong {
+    text-align: justify !important;
+  }
+
+  .ribbon span {
+    width: 156px;
+    height: 37px;
+    line-height: 37px;
+    position: absolute;
+    top: 51px;
+    left: -41px;
+    margin-left: 0px;
+    z-index: 2;
+    overflow: hidden;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-46deg);
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 13px;
+  }
+
+  .hotsale-ribbon > span.ribbon {
+    left: 0 !important;
+  }
+  .ribbon {
+    width: 188px;
+    height: 188px;
+    position: absolute;
+    top: -26px;
+    left: 11px;
+    overflow: hidden;
+    text-transform: uppercase;
+    color: #fff;
+    font-size: 13px;
+    background: unset;
+  }
+  #section-hotsale > span.view_all {
+    top: -8px !important;
+  }
+  .view_all {
+    display: flex;
+    justify-content: space-evenly;
+    position: absolute;
+    right: -8px;
+    top: 11px;
+    color: #606060 !important;
+    font-size: 15px;
+    font-weight: 600;
+    align-items: normal;
+    transition: all 0.6s ease;
+    width: 100px;
+    margin-top: 10px;
+  }
+  #section-brands h2,
+  #section-offers h2 {
+    padding: 20px 30px 20px 31px;
+  }
+
+  /* #section-newArrival .de-item h4,
+  #section-newArrivalView h4,
+  #section-hotsale h4 {
+    min-height: 65px;
+  } */
+  /* section,
+  .section-padding {
+    padding: 0px 0px !important;
+  }
+  #section-offers .owl-stage-outer {
+    margin: 0px 38px; */
+  /* padding: 25px 10px 0 10px; */
+  /* padding: 25px 3px 0 19px;
+  } */
+
+  /* #section-newArrival .owl-carousel.owl-drag .owl-item {
+    padding-left: 70px;
+} */
+
+  #section-offers .owl-item .item,
+  #section-newArrival .owl-item .item {
+    margin: 0;
+    margin-left: 2px;
+  }
+
+  .discount-tag::after {
+    content: "";
+    position: absolute;
+    right: 6px;
+    top: 27px;
+    border-top: 0px solid transparent;
+    border-bottom: 11px solid transparent;
+    border-right: 56px solid #3b4d00;
+  }
+}
+
+@media only screen and (min-width: 1200px) and (max-width: 1599px) {
+  /* .menu__inner {
+    margin-top: -53px !important;
+  } */
+
+  #section-offers .owl-stage-outer {
+    padding: 23px 33px 0px 33px !important;
+  }
+
+  .ribbon {
+    left: 35px;
+  }
+  .ribbon span {
+    left: -45px;
+  }
+  .owl-prev span,
+  .owl-next span {
+    font-size: 48px;
+  }
+  #section-offers h2,
+  #section-newArrival h2,
+  #section-brands h2,
+  #section-helmets h2 {
+    font-size: 26px;
+  }
+}
+
+/* Large Desktops and Monitors */
+@media only screen and (min-width: 1600px) and (max-width: 2560px) {
+  .owl-prev span,
+  .owl-next span {
+    font-size: 50px;
+  }
+}
+
+/* Menuuuu */
+
+/* Tab */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .menu__inner {
+    margin-top: 8px !important;
+  }
+  .menu {
+    width: auto;
+    margin-top: -131px;
+  }
+  .brand img {
+    width: auto;
+    height: 92px;
+  }
+}
+
+@media only screen and (min-width: 1025px) and (max-width: 1440px) {
+  .menu__inner {
+    margin-top: 130px !important;
+  }
+  .menu {
+    width: auto;
+    margin-top: -131px;
+  }
+  .brand img {
+    width: auto;
+    height: 92px !important;
+  }
+}
+
+@media only screen and (min-width: 1440px) and ((max-width: 1919px)) {
+  .menu {
+    width: auto;
+    margin-top: -10px !important;
+  }
+
+  .brand img {
+    height: 102px !important;
+    margin-top: -3px !important;
+  }
+}
+
+@media only screen and (min-width: 1920px) and ((max-width: 2560px)) {
+  .menu {
+    width: auto;
+    margin-top: 0px !important;
+  }
+
+  .brand img {
+    height: 100px !important;
+    margin-top: -3px !important;
+  }
+}
