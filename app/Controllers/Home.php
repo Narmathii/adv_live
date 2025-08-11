@@ -97,7 +97,7 @@ class Home extends BaseController
            hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
            specifications, flag, 1 AS order_col
     FROM tbl_products
-    WHERE flag = 1 AND hot_sale = 1
+    WHERE flag = 1 AND hot_sale = 1 AND offer_type = 0 
     UNION ALL
     SELECT prod_id, access_id AS brand_id, sub_access_id AS modal_id, product_name, 
            billing_name, product_price, offer_price, offer_type, offer_details, 
@@ -105,7 +105,7 @@ class Home extends BaseController
            img_3, img_4, img_5, img_6, img_7, img_8, img_9, img_10, prod_desc,  hot_sale, tbl_name, 
            search_brand, weight, weight_units, quantity, specifications, flag, 2 AS order_col
     FROM tbl_accessories_list
-    WHERE flag = 1 AND hot_sale = 1
+    WHERE flag = 1 AND hot_sale = 1 AND offer_type = 0 
     UNION ALL
     SELECT prod_id, r_menu_id AS brand_id, r_sub_id AS modal_id, product_name, 
            billing_name, product_price, offer_price, offer_type, offer_details, 
@@ -113,7 +113,7 @@ class Home extends BaseController
            img_4, img_5, img_6, img_7, img_8, img_9, img_10, prod_desc,  hot_sale, tbl_name, search_brand, weight, 
            weight_units, quantity, specifications, flag, 3 AS order_col
     FROM tbl_rproduct_list
-    WHERE flag = 1 AND hot_sale = 1
+    WHERE flag = 1 AND hot_sale = 1 AND offer_type = 0
     UNION ALL
     SELECT prod_id, h_menu_id AS brand_id, h_submenu_id AS modal_id, product_name, 
            billing_name, product_price, offer_price, offer_type, offer_details, arrival_status, 
@@ -121,7 +121,7 @@ class Home extends BaseController
            img_7, img_8, img_9, img_10, prod_desc, hot_sale, tbl_name, search_brand, weight, weight_units, 
            quantity, specifications, flag, 4 AS order_col
     FROM tbl_helmet_products
-    WHERE flag = 1 AND hot_sale = 1
+    WHERE flag = 1 AND hot_sale = 1 AND offer_type = 0
     UNION ALL
     SELECT prod_id, lug_menu_id AS brand_id, lug_submenu_id AS modal_id, product_name, 
            billing_name, product_price, offer_price, offer_type, offer_details, arrival_status, 
@@ -129,7 +129,7 @@ class Home extends BaseController
            img_7, img_8, img_9, img_10, prod_desc, hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
            specifications, flag, 5 AS order_col
     FROM tbl_luggagee_products
-    WHERE flag = 1 AND hot_sale = 1
+    WHERE flag = 1 AND hot_sale = 1 AND offer_type = 0
     UNION ALL
     SELECT prod_id, camp_menu_id AS brand_id, c_submenu_id AS modal_id, product_name, 
            billing_name, product_price, offer_price, offer_type, offer_details, arrival_status, 
@@ -137,7 +137,7 @@ class Home extends BaseController
            img_7, img_8, img_9, img_10, prod_desc, hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
            specifications, flag, 6 AS order_col
     FROM tbl_camping_products
-    WHERE flag = 1 AND hot_sale = 1
+    WHERE flag = 1 AND hot_sale = 1 AND offer_type = 0
     ORDER BY order_col, prod_id')->getResultArray();
 
 
@@ -3969,27 +3969,29 @@ LIMIT ? OFFSET ?
          FROM (
              SELECT prod_id
              FROM tbl_accessories_list
-             WHERE flag = 1 AND `offer_type` = 0 AND `hot_sale` = 1
+             WHERE ( `hot_sale` = 1 OR offer_type = 0) AND flag = 1
              UNION ALL
              SELECT prod_id
              FROM tbl_rproduct_list
-             WHERE flag = 1 AND `offer_type` = 0 AND `hot_sale` = 1
+             WHERE ( `hot_sale` = 1 OR offer_type = 0) AND flag = 1
              UNION ALL
              SELECT prod_id
              FROM tbl_helmet_products
-             WHERE flag = 1 AND `offer_type` = 0 AND `hot_sale` = 1
+             WHERE ( `hot_sale` = 1 OR offer_type = 0) AND flag = 1
              UNION ALL
              SELECT prod_id
              FROM tbl_luggagee_products
-             WHERE flag = 1 AND `offer_type` = 0 AND `hot_sale` = 1
+             WHERE ( `hot_sale` = 1 OR offer_type = 0) AND flag = 1
              UNION ALL
              SELECT prod_id
              FROM tbl_camping_products
-             WHERE flag = 1 AND `offer_type` = 0 AND `hot_sale` = 1
+             WHERE ( `hot_sale` = 1 OR offer_type = 0) AND flag = 1
          ) AS combined_table
      ")->getRow();
 
+
         $totalRows = $totalData->total_count;
+
 
 
         $totalPages = ceil($totalRows / $perPage);
@@ -4007,7 +4009,7 @@ LIMIT ? OFFSET ?
         hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
         specifications, flag, 1 AS order_col
  FROM tbl_products
- WHERE flag = 1 AND hot_sale = 1
+ WHERE  (hot_sale = 1 OR offer_type = 0) AND flag = 1 
  UNION ALL
  SELECT prod_id, access_id AS brand_id, sub_access_id AS modal_id, product_name, 
         billing_name, product_price, offer_price, offer_type, offer_details, 
@@ -4015,7 +4017,7 @@ LIMIT ? OFFSET ?
         img_3, img_4, img_5, img_6, img_7, img_8, img_9, img_10, prod_desc,  hot_sale, tbl_name, 
         search_brand, weight, weight_units, quantity, specifications, flag, 2 AS order_col
  FROM tbl_accessories_list
- WHERE flag = 1 AND hot_sale = 1
+ WHERE  (hot_sale = 1 OR offer_type = 0) AND flag = 1 
  UNION ALL
  SELECT prod_id, r_menu_id AS brand_id, r_sub_id AS modal_id, product_name, 
         billing_name, product_price, offer_price, offer_type, offer_details, 
@@ -4023,7 +4025,7 @@ LIMIT ? OFFSET ?
         img_4, img_5, img_6, img_7, img_8, img_9, img_10, prod_desc,  hot_sale, tbl_name, search_brand, weight, 
         weight_units, quantity, specifications, flag, 3 AS order_col
  FROM tbl_rproduct_list
- WHERE flag = 1 AND hot_sale = 1
+ WHERE  (hot_sale = 1 OR offer_type = 0) AND flag = 1 
  UNION ALL
  SELECT prod_id, h_menu_id AS brand_id, h_submenu_id AS modal_id, product_name, 
         billing_name, product_price, offer_price, offer_type, offer_details, arrival_status, 
@@ -4031,7 +4033,7 @@ LIMIT ? OFFSET ?
         img_7, img_8, img_9, img_10, prod_desc, hot_sale, tbl_name, search_brand, weight, weight_units, 
         quantity, specifications, flag, 4 AS order_col
  FROM tbl_helmet_products
- WHERE flag = 1 AND hot_sale = 1
+ WHERE  (hot_sale = 1 OR offer_type = 0) AND flag = 1 
  UNION ALL
  SELECT prod_id, lug_menu_id AS brand_id, lug_submenu_id AS modal_id, product_name, 
         billing_name, product_price, offer_price, offer_type, offer_details, arrival_status, 
@@ -4039,7 +4041,7 @@ LIMIT ? OFFSET ?
         img_7, img_8, img_9, img_10, prod_desc, hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
         specifications, flag, 5 AS order_col
  FROM tbl_luggagee_products
- WHERE flag = 1 AND hot_sale = 1
+ WHERE  (hot_sale = 1 OR offer_type = 0) AND flag = 1 
  UNION ALL
  SELECT prod_id, camp_menu_id AS brand_id, c_submenu_id AS modal_id, product_name, 
         billing_name, product_price, offer_price, offer_type, offer_details, arrival_status, 
@@ -4047,7 +4049,7 @@ LIMIT ? OFFSET ?
         img_7, img_8, img_9, img_10, prod_desc, hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
         specifications, flag, 6 AS order_col
  FROM tbl_camping_products
- WHERE flag = 1 AND hot_sale = 1
+ WHERE  (hot_sale = 1 OR offer_type = 0) AND flag = 1 
  ORDER BY order_col, prod_id
 LIMIT ? OFFSET ?', [$perPage, $offset])->getResultArray();
 
@@ -4056,32 +4058,32 @@ LIMIT ? OFFSET ?', [$perPage, $offset])->getResultArray();
         $res['search_brand'] = $db->query("SELECT DISTINCT a.search_brand,a.tbl_name , b.`brand_name`
  FROM tbl_products AS a INNER JOIN brand_master AS b 
  ON a.search_brand = b.brand_master_id
- WHERE a.flag= 1 AND b.flag = 1 AND a.`hot_sale` =  1
+ WHERE (a.hot_sale = 1 OR a.offer_type = 0) AND a.flag = 1  AND b.flag = 1 
  UNION ALL
  SELECT DISTINCT a.search_brand , a.tbl_name , b.`brand_name`
  FROM tbl_accessories_list AS a INNER JOIN brand_master AS b 
  ON a.search_brand = b.brand_master_id
- WHERE a.flag= 1 AND b.flag = 1 AND a.`hot_sale` =  1
+ WHERE (a.hot_sale = 1 OR a.offer_type = 0) AND a.flag = 1  AND b.flag = 1 
  UNION ALL
  SELECT DISTINCT a.search_brand ,a.tbl_name, b.`brand_name`
  FROM tbl_rproduct_list AS a INNER JOIN brand_master AS b 
  ON a.search_brand = b.brand_master_id
- WHERE a.flag= 1 AND b.flag = 1 AND a.`hot_sale` =  1
+ WHERE (a.hot_sale = 1 OR a.offer_type = 0) AND a.flag = 1  AND b.flag = 1 
  UNION 
  SELECT DISTINCT a.search_brand ,a.tbl_name, b.`brand_name`
  FROM tbl_helmet_products AS a INNER JOIN brand_master AS b 
  ON a.search_brand = b.brand_master_id
- WHERE a.flag= 1 AND b.flag = 1 AND a.`hot_sale` =  1
+ WHERE (a.hot_sale = 1 OR a.offer_type = 0) AND a.flag = 1  AND b.flag = 1 
  UNION
  SELECT DISTINCT a.search_brand ,a.tbl_name, b.`brand_name`
  FROM tbl_luggagee_products AS a INNER JOIN brand_master AS b 
  ON a.search_brand = b.brand_master_id
- WHERE a.flag= 1 AND b.flag = 1 AND a.`hot_sale` =  1
+ WHERE (a.hot_sale = 1 OR a.offer_type = 0) AND a.flag = 1  AND b.flag = 1 
  UNION 
  SELECT DISTINCT a.search_brand ,a.tbl_name, b.`brand_name`
  FROM tbl_camping_products AS a INNER JOIN brand_master AS b 
  ON a.search_brand = b.brand_master_id
- WHERE a.flag= 1 AND b.flag = 1 AND a.`hot_sale` =  1
+ WHERE (a.hot_sale = 1 OR a.offer_type = 0) AND a.flag = 1  AND b.flag = 1 
  ")->getResultArray();
         $res['search_brand'] = $this->getDistinctValues($res['search_brand'], 'search_brand');
 

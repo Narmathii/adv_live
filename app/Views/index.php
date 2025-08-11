@@ -442,16 +442,16 @@
 
 
     <!-- offers  start  -->
-    <?php $className = $offers <= 0 ? "d-none" : ""; ?>
+    <!-- <?php $className = $offers <= 0 ? "d-none" : ""; ?>
     <section id="section-offers" class="p-5 <?= $className ?>">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12 text-center newarrival_header">
                     <h2>OFFERS</h2>
                     <a href="<?php echo base_url(); ?>offers/1"><span class="view_all">View all<i
-                                class="right_arrow"></i></span></a>
-                    <!-- <span class="view_all">View all<i class="fa fa-angle-right"></i></span>  -->
-                </div>
+                                class="right_arrow"></i></span></a> -->
+    <!-- <span class="view_all">View all<i class="fa fa-angle-right"></i></span>  -->
+    <!-- </div>
                 <div class="col-12 col-carousel p-0">
                     <div class="owl-carousel carousel-main">
                         <?php for ($i = 0; $i < 8; $i++) { ?>
@@ -528,8 +528,9 @@
 
         </div>
 
-    </section>
+    </section> -->
     <!-- offers  End  -->
+
 
     <!-- New Arrivals Start  -->
     <section id="section-newArrival" class="p-5">

@@ -310,7 +310,7 @@ require("components/head.php");
                         </div>
 
                         <input type="hidden" id="total_page" value="<?= $total_page ?>">
-                        <div class="col-lg-9 ">
+                        <div class="col-lg-12">
                             <div class="pagination-container" id="pagination-container">
 
                             </div>

@@ -563,6 +563,7 @@ require("components/head.php");
                                     const formatOffer = formatter.format(product.offer_price);
                                     const formatMRP = formatter.format(product.product_price);
                                     const stockStatus = product.quantity <= 0 ? 'Out of stock' : 'Available';
+                                    const offerTypeDetail = product.offer_type;
                                     const offerClass = (product.offer_details == 1 || product.offer_details == 2 || product.offer_details == "" || product.offer_details == 0 || product.offer_details == "-") ? "d-none" : "";
                                     const piceClassname = (product.product_price === product.offer_price) ? 'd-none' : '';
 
