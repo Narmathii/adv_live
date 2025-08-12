@@ -347,6 +347,7 @@ class AccessListController extends BaseController
         $brandName = $this->request->getPost('brand_name');
         $modalName = $this->request->getPost('modal_name');
 
+
         $modalID = implode(',', $modalName);
         $brandID = implode(',', $brandName);
         $data['tbl_name'] = "tbl_accessories_list";

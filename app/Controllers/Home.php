@@ -2679,6 +2679,8 @@ GROUP BY `product_id` HAVING SUM(`prod_count`)<=10";
 
         $res['product'] = $db->query($query)->getResultArray();
 
+
+
         $res['meta_title'] = "Top Brand Bike Accessories in Coimbatore | Top Bike Gear Tamilnadu";
         $res['meta_description'] = "Adventure Shoppe offers top branded bike accessories in Coimbatore and Tamilnadu, featuring premium gear, parts, and riding essentials for all bike enthusiasts.";
 

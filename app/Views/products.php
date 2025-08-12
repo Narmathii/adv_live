@@ -531,6 +531,7 @@ require("components/head.php");
                             brand_id
                         },
                         success: function (data) {
+
                             const count = data.products.length;
                             const totalPages = data.pagination.length;
 
@@ -564,54 +565,60 @@ require("components/head.php");
                                     const formatMRP = formatter.format(product.product_price);
                                     const stockStatus = product.quantity <= 0 ? 'Out of stock' : 'Available';
                                     const offerTypeDetail = product.offer_type;
-                                    const offerClass = (product.offer_details == 1 || product.offer_details == 2 || product.offer_details == "" || product.offer_details == 0 || product.offer_details == "-") ? "d-none" : "";
+
+                                    // const offerClass = (product.offer_details == 1 || product.offer_details == 2 || product.offer_details == "" || product.offer_details == 0 || product.offer_details == "-") ? "d-none" : (offerTypeDetail == '1' ? "" : "d-none");
+                                    const offerClass = (offerTypeDetail == 2) ? "d-none" : "";
+
                                     const piceClassname = (product.product_price === product.offer_price) ? 'd-none' : '';
 
+                                    const offerDisp = product.offer_type == 1 ? 'Flat Discount' : product.offer_details + '%<span class="off_span">off</span>';
+
+
                                     let buyNow = (product.quantity <= 0) ? `
-                                <div>
-                                    <a class="btn-main buynow_btn"
-                                        href="https://wa.me/7358992528?text=${encodeURIComponent("Welcome to Adventure Shoppe!\nProduct Name: " + product.product_name + "\nProduct Price: " + product.product_price)}">
-                                        Contact us to order
-                                    </a>
-                                </div>` : `
-                                <div>
-                                    <a class="btn-main buynow_btn"
-                                        href="${base_Url}accessories-detail/${redirectUrl}/${prodId}">
-                                        Buy Now
-                                    </a>
-                                </div>`;
+                                    <div>
+                                        <a class="btn-main buynow_btn"
+                                            href="https://wa.me/7358992528?text=${encodeURIComponent("Welcome to Adventure Shoppe!\nProduct Name: " + product.product_name + "\nProduct Price: " + product.product_price)}">
+                                            Contact us to order
+                                        </a>
+                                    </div>` : `
+                                    <div>
+                                        <a class="btn-main buynow_btn"
+                                            href="${base_Url}accessories-detail/${redirectUrl}/${prodId}">
+                                            Buy Now
+                                        </a>
+                                    </div>`;
 
                                     searchResults += `
-                                <div class="col-12 col-lg-3 productCard my-4">
-                                    <form>
-                                        <div class="de-item">
-                                            <span class="discount-tag ${offerClass}">${product.offer_details}%<span class="off_span">off</span></span>
-                                            <a><span aria-hidden="true" class="icon_heart_alt wishlist-icon"
-                                                data-id="${product.prod_id}" tbl-name="${product.tbl_name}"></span></a>
-                                            <div class="d-img">
-                                                <a href="${base_Url}accessories-detail/${redirectUrl}/${prodId}">
-                                                    <img src="${base_Url}${product.product_img}" alt="${product.product_name}" />
-                                                </a>
-                                            </div>
-                                            <div class="d-info">
-                                                <div class="d-text">
-                                                    <h4>${product.product_name}</h4>
-                                                    <span class="d-price">${formatOffer}
-                                                        <small class="${piceClassname}" style="text-decoration:line-through">${formatMRP}</small>
-                                                    </span>
-                                                    <p class="d-flex wish-status my-2">
-                                                        <span class="d-flex align-items-center">
-                                                            <span class="product_status ${stockStatus == 'Out of stock' ? 'outof_stock' : ''}">
-                                                                <label>${stockStatus}</label>
-                                                            </span>
+                                    <div class="col-12 col-lg-3 productCard my-4">
+                                        <form>
+                                            <div class="de-item">
+                                                <span class="discount-tag ${offerClass}">${offerDisp}</span>
+                                                <a><span aria-hidden="true" class="icon_heart_alt wishlist-icon"
+                                                    data-id="${product.prod_id}" tbl-name="${product.tbl_name}"></span></a>
+                                                <div class="d-img">
+                                                    <a href="${base_Url}accessories-detail/${redirectUrl}/${prodId}">
+                                                        <img src="${base_Url}${product.product_img}" alt="${product.product_name}" />
+                                                    </a>
+                                                </div>
+                                                <div class="d-info">
+                                                    <div class="d-text">
+                                                        <h4>${product.product_name}</h4>
+                                                        <span class="d-price">${formatOffer}
+                                                            <small class="${piceClassname}" style="text-decoration:line-through">${formatMRP}</small>
                                                         </span>
-                                                    </p>
-                                                    ${buyNow}
+                                                        <p class="d-flex wish-status my-2">
+                                                            <span class="d-flex align-items-center">
+                                                                <span class="product_status ${stockStatus == 'Out of stock' ? 'outof_stock' : ''}">
+                                                                    <label>${stockStatus}</label>
+                                                                </span>
+                                                            </span>
+                                                        </p>
+                                                        ${buyNow}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </form>
-                                </div>`;
+                                        </form>
+                                    </div>`;
                                 });
 
                                 $('.seach_results').html(searchResults);
