@@ -553,9 +553,11 @@ require("components/head.php");
                                     const offerPrice = product.offer_price;
                                     const formatOffer = formatter.format(offerPrice);
                                     let stock = product.quantity;
-
-                                    let offerClass = (product.offer_details == 1 || product.offer_details == 2 || product.offer_details == "" || product.offer_details == 0 || product.offer_details == "-") ? "d-none" : "";
+                                    const offerTypeDetail = product.offer_type;
+                                    const offerClass = (offerTypeDetail == 2) ? "d-none" : "";
                                     let piceClassname = (MRPPrice === offerPrice) ? 'd-none' : '';
+
+                                    const offerDisp = product.offer_type == 1 ? 'Flat Discount' : product.offer_details + '%<span class="off_span">off</span>';
 
                                     let tblName = product.tbl_name;
                                     let url = '';
@@ -603,7 +605,7 @@ require("components/head.php");
                                 <div class="col-12 col-lg-3 productCard my-4">
                                     <form>
                                         <div class="de-item">
-                                            <span class="discount-tag ${offerClass}">${product.offer_details}%<span class="off_span">off</span></span>
+                                             <span class="discount-tag ${offerClass}">${offerDisp}</span>
                                             <a><span aria-hidden="true" class="icon_heart_alt wishlist-icon"
                                                 data-id="${product.prod_id}" tbl-name="${product.tbl_name}"></span></a>
                                             <div class="d-img">

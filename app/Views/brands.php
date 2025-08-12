@@ -216,21 +216,31 @@ require("components/head.php");
                                                 ?>
 
                                                 <a href="<?php echo $url; ?>">
-                                                    <img
-                                                        src="<?php echo base_url() ?>/<?php echo $product[$i]['product_img'] ?>" alt="<?php echo $product[$i]['product_name'] ?>"/>
+                                                    <img src="<?php echo base_url() ?>/<?php echo $product[$i]['product_img'] ?>"
+                                                        alt="<?php echo $product[$i]['product_name'] ?>" />
                                                 </a>
                                             </div>
 
                                             <?php
                                             $offerType = $product[$i]['offer'];
 
-                                            if ($offerType == 1 || $offerType == 2 || $product[$i]['offer_details'] == "" || $product[$i]['offer_details'] == 0) {
+                                            $dispOff = $offerType == 1
+                                                ? 'Flat Discount'
+                                                : $product[$i]['offer_details'] . "%" . "<span class='off_span'>off</span>";
+
+                                            if ($offerType == 2) {
                                                 ?>
                                                 <span class="offerrate-"></span>
-                                            <?php } else { ?>
-                                                <span class="  discount-tag"><?php echo $product[$i]['offer_details'] ?>%<span class="off_span">off</span></span>
-                                            <?php }
+                                                <?php
+                                            } else {
+                                                ?>
+                                                <span class="discount-tag"><?= $dispOff ?></span>
+                                                <?php
+                                            }
                                             ?>
+
+
+
 
                                             <div class="d-info">
                                                 <div class="d-text">

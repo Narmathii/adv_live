@@ -305,7 +305,7 @@ require("components/head.php");
                     </div>
                     <div class="col-lg-9">
                         <div class="row seach_results">
-                          <!-- Dynamic Data = -->
+                            <!-- Dynamic Data = -->
 
                         </div>
 
@@ -318,7 +318,7 @@ require("components/head.php");
 
                         <input type="hidden" id="sub_id" data-subid="<?= $sub_id ?>">
 
-                      
+
                     </div>
                 </div>
             </div>
@@ -330,15 +330,15 @@ require("components/head.php");
         require("components/footer.php");
         ?>
 
-    
-         <script>
+
+        <script>
             $(document).ready(function () {
                 if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
                     history.replaceState(null, '', window.location.pathname);
                 }
 
-                 const page = setFiltersFromURL();
-               filter_data(page);
+                const page = setFiltersFromURL();
+                filter_data(page);
 
                 $('.common_selector').click(function () {
                     filter_data(1);
@@ -378,7 +378,7 @@ require("components/head.php");
                     const orderby_mob = $('.orderby_mob').val();
                     const discount_mob = $('.discount_mob').val();
 
-                   
+
 
                     available.forEach(val => {
                         if (!newParams.getAll('available[]').includes(val)) {
@@ -498,7 +498,7 @@ require("components/head.php");
                             const count = data.products.length;
                             const totalPages = data.pagination.length;
 
-                          
+
                             let searchResults = "";
 
                             if (count <= 0) {
@@ -528,11 +528,17 @@ require("components/head.php");
                                     const MRPPrice = product.product_price;
                                     const formatMRP = formatter.format(MRPPrice);
                                     const offerPrice = product.offer_price;
+
                                     const formatOffer = formatter.format(offerPrice);
                                     let stock = product.quantity;
 
-                                    let offerClass = (product.offer_details == 1 || product.offer_details == 2 || product.offer_details == "" || product.offer_details == 0 || product.offer_details == "-") ? "d-none" : "";
+                                    const offerTypeDetail = product.offer_type;
+                                    const offerClass = (offerTypeDetail == 2) ? "d-none" : "";
+
+                                    // let offerClass = (product.offer_details == 1 || product.offer_details == 2 || product.offer_details == "" || product.offer_details == 0 || product.offer_details == "-") ? "d-none" : "";
                                     let piceClassname = (MRPPrice === offerPrice) ? 'd-none' : '';
+
+                                    const offerDisp = product.offer_type == 1 ? 'Flat Discount' : product.offer_details + '%<span class="off_span">off</span>';
 
                                     let tblName = product.tbl_name;
                                     let url = '';
@@ -580,7 +586,7 @@ require("components/head.php");
                                 <div class="col-12 col-lg-3 productCard my-4">
                                     <form>
                                         <div class="de-item">
-                                            <span class="discount-tag ${offerClass}">${product.offer_details}%<span class="off_span">off</span></span>
+                                             <span class="discount-tag ${offerClass}">${offerDisp}</span>
                                             <a><span aria-hidden="true" class="icon_heart_alt wishlist-icon"
                                                 data-id="${product.prod_id}" tbl-name="${product.tbl_name}"></span></a>
                                             <div class="d-img">
@@ -611,7 +617,7 @@ require("components/head.php");
 
                                 $('.seach_results').html(searchResults);
 
-                                if (count >= 12 || (totalPages === 1 && count > 12) || (totalPages >1  && count <= 12 )) {
+                                if (count >= 12 || (totalPages === 1 && count > 12) || (totalPages > 1 && count <= 12)) {
                                     $("#pagination-container-default").addClass("d-none");
                                     $('#pagination-container').html("");
                                     renderPagination(data, page);
