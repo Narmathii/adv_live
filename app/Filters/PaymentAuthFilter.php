@@ -41,6 +41,6 @@ class PaymentAuthFilter implements FilterInterface
     {
         $session = session();
         $session->destroy();
-        return redirect()->to('login');
+
     }
 }
