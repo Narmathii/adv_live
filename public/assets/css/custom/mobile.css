@@ -74,6 +74,12 @@
   }
 }
 
+@media only screen and (max-width: 391px) {
+  /*  
+  #section-hotsale .items_wrapper {
+    width: 0;
+  } */
+}
 @media only screen and (max-width: 768px) {
   .add-address {
     right: 17px;
@@ -83,16 +89,33 @@
   .cartlist-container {
     padding: 75px 10px !important;
   }
+
+  #section-newArrival .owl-carousel.owl-drag .owl-item {
+    padding-left: 0 !important;
+  }
+
+  #section-newArrival h2,
+  #section-helmets h2,
+  #social_media h2,
+  #section-hotsale h2 {
+    padding: 20px 30px 10px 30px;
+    font-size: 20px;
+  }
+
+  #section-offers h2,
+  #section-brands h2 {
+    font-size: 20px;
+  }
+      .view_all {
+        top: 10px;
+      }
 }
-/* @media only screen and (max-width: 1441px) {
-  
-} */
 
 /* Mobile (Landscape) and small phones */
 @media only screen and (min-width: 425px) and (max-width: 767px) {
   #section-newArrival .owl-carousel.owl-drag .owl-item {
     /* padding-left: 15px; */
-    padding: 3px !important;
+    /* padding: 3px !important; */
   }
   #section-offers h2,
   #section-newArrival h2,
@@ -101,6 +124,9 @@
   #social_media h2,
   #section-hotsale h2 {
     font-size: 19px;
+  }
+  .owl-carousel.owl-loaded {
+    padding-right: 19px !important;
   }
 
   .share-btn {
@@ -120,12 +146,12 @@
 
   .ribbon span {
     width: 156px;
-    height: 37px;
+    height: 38px;
     line-height: 37px;
     position: absolute;
     top: 51px;
-    left: -41px;
-    margin-left: 0px;
+    left: -38px;
+    /* margin-left: -6px; */
     z-index: 2;
     overflow: hidden;
     -webkit-transform: rotate(-45deg);

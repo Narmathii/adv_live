@@ -282,13 +282,11 @@
 </style>
 
 <body onload="initialize()" class="dark-scheme home_page-">
-
     <div id="wrapper">
         <?php require "components/header.php"; ?>
         <div class="no-bottom no-top" id="content">
             <div id="top"></div>
             <section id="de-carousel" class="no-top no-bottom carousel slide carousel-fade" data-mdb-ride="carousel">
-
                 <!-- Inner -->
                 <div class="carousel-inner position-relative">
                     <!-- Single item -->
@@ -1550,6 +1548,26 @@
     console.log(widthrttrt);
 </script>
 
+<script>
+    $('.carousel-main').owlCarousel({
+        loop: true,
+        margin: 10,
+        nav: true,
+        dots: false,
+        responsive: {
+            0: {         // mobile
+                items: 2
+            },
+            768: {       // tablet
+                items: 3
+            },
+            1024: {      // desktop
+                items: 4
+            }
+        }
+    });
+
+</script>
 
 
 </html>

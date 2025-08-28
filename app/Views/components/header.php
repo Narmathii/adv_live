@@ -973,7 +973,7 @@ video {
                     <?php
 
 
-                    for ($i = 1; $i < count($accessories); $i++) {
+                    for ($i = 0; $i < count($accessories); $i++) {
                         ?>
                         <div class="submenu__inner">
                             <h4 class="submenu__title">
@@ -1058,7 +1058,7 @@ video {
 
                 </div>
             </li>
-            <li class="menu__item menu__dropdown" id="menu__item">
+            <li class="menu__item menu__dropdown auto_menu" id="menu__item">
                 <a class="menu__link">
                     LUGGAGES
                     <i class="bx bx-chevron-right"></i>
@@ -1087,7 +1087,7 @@ video {
 
                 </div>
             </li>
-            <li class="menu__item menu__dropdown" id="menu__item">
+            <li class="menu__item menu__dropdown auto_menu" id="menu__item">
                 <a class="menu__link">
                     CAMPING
                     <i class="bx bx-chevron-right"></i>
