@@ -1320,7 +1320,7 @@ h4.submenu__title {
 
 /* Custom scrollbar styles */
 .menu__dropdown .submenu::-webkit-scrollbar {
-  width: 1px;
+  width: 10px;
   /* Set the width of the scrollbar */
 }
 
@@ -5989,7 +5989,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 #section-newArrival .items_wrapper,
 #section-hotsale .items_wrapper {
-  width: 240px;
+  /* width: 240px; */
 }
 #section-newArrival .de-item {
   box-shadow: 0px 4px 6px rgba(207, 207, 207, 0.25),

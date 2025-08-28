@@ -21,20 +21,20 @@ class App extends BaseConfig
     // public string $baseURL = 'http://localhost/ci4projects/adventure_final';
     // public string $baseURL = 'https://www.adventureshoppe.com/';
 
-    public string $baseURL = '';
+    public string $baseURL = 'http://localhost/adv_liv/';
 
-    public function __construct()
-    {
-        // Ensure the parent constructor is called first
-        parent::__construct();
+    // public function __construct()
+    // {
+    //     // Ensure the parent constructor is called first
+    //     parent::__construct();
 
-        // Dynamically set the base URL
-        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === "on") ? "https" : "http";
-        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $scriptName = dirname($_SERVER['SCRIPT_NAME']);
+    //     // Dynamically set the base URL
+    //     $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === "on") ? "https" : "http";
+    //     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    //     $scriptName = dirname($_SERVER['SCRIPT_NAME']);
 
-        $this->baseURL = $protocol . '://' . $host . $scriptName . '/';
-    }
+    //     $this->baseURL = $protocol . '://' . $host . $scriptName . '/';
+    // }
 
     /**
      * Allowed Hostnames in the Site URL other than the hostname in the baseURL.
