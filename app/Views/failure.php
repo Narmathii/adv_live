@@ -15,7 +15,7 @@ require ("components/head.php");
                     <p><strong>Payment id :</strong> <?php echo $paymentid ?></p>
 
                     <div class="confirm_order">
-                        <a href="<?php echo base_url() ?>" type="button"
+                        <a href="<?php echo base_url() ?>myorders" type="button"
                             class="continue_shoppingBtn pay_btn prev-step me-4">
                             <i class="arrow_left me-2"></i>Back to purchase
                         </a>

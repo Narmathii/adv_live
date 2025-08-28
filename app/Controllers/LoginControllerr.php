@@ -569,6 +569,8 @@ class LoginControllerr extends BaseController
 
 
       $callbackURL = session()->get('callback_url');
+
+  
       if ($callbackURL) {
         $session->remove('callback_url');
         $res['c_url'] = $callbackURL;

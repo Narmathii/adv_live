@@ -299,15 +299,23 @@ class CartCheckoutController extends BaseController
         $db = \Config\Database::connect();
 
         $loginStatus = session()->get('loginStatus');
+
+        $previousURL = previous_url();
+        $this->session->set('callback_url', $previousURL);
+
         if ($loginStatus == "NO") {
             $res['code'] = '400';
             $res['msg'] = 'signin';
-            echo json_encode($res);
+            $res['prev_url'] = $previousURL;
+
         } else {
             $res['code'] = '200';
             $res['msg'] = 'success';
-            echo json_encode($res);
+
         }
+
+        echo json_encode($res);
+
     }
 
 }

@@ -333,8 +333,6 @@ padding: 10px 20px 10px;
                                         </div>
                                         </div>
                                     </div>
-
-
                                     <?php } ?>
                                 </div>
                                

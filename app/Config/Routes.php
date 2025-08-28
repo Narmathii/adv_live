@@ -129,7 +129,7 @@ $routes->post('delete-address', 'AddressController::deleteAddress', ['filter' =>
 $routes->get('get-profile', 'UserController::getprofile', ['filter' => 'AuthFilter']);
 $routes->post('update-profile', 'UserController::updateprofile', ['filter' => 'AuthFilter']);
 $routes->post('cart-checkout', 'CartCheckoutController::cartCheckout', ['filter' => 'AuthFilter']);
-$routes->get('check-userlogin', 'CartCheckoutController::checkLoginRes', ['filter' => 'SessionAuth']);
+$routes->get('check-userlogin', 'CartCheckoutController::checkLoginRes');
 $routes->get('check-address', 'CartCheckoutController::checkAddress', ['filter' => 'SessionAuth']);
 $routes->get('place-order', 'CartCheckoutController::placeOrder', ['filter' => 'SessionAuth']);
 

@@ -695,11 +695,11 @@ $(document).ready(function () {
       $.ajax({
         type: "GET",
         url: base_Url + "check-userlogin",
+        dataType: "json",
         success: function (data) {
-          var d = $.parseJSON(data);
-          if (d.code == 400) {
-            window.location.href = "login";
-          } else if (d.code == 200) {
+          if (data.code == 400) {
+            window.location.href = base_Url + "login";
+          } else if (data.code == 200) {
             getEmail();
           }
         },

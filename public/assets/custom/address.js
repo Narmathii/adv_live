@@ -272,14 +272,13 @@ $(document).ready(function () {
 
     $("#delete_modal").modal("show");
 
-    var index = $(this).attr("index");
-
-    add_id = res_DATA[index]["add_id"];
     $(".btndelete").click(function () {
+      var addID = $(this).attr("add_id");
+
       $.ajax({
         type: "POST",
         url: base_Url + "delete-address",
-        data: { add_id: add_id },
+        data: { add_id: addID },
         headers: { Authorization: "Bearer " + token },
 
         success: function (data) {
