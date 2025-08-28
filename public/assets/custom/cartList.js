@@ -353,7 +353,7 @@ $(document).ready(function () {
   }
 
   $(document).ready(function () {
-    $("#multi-step-form").find(".step").slice(1).hide();
+    $("#multi-step-form").find(".step").slice(1, 3).hide();
 
     $(".next-step").click(function () {
       if (currentStep < 3) {
@@ -435,6 +435,7 @@ $(document).ready(function () {
             let courierType = $('input[name="courier_option"]:checked').val();
             let charge = "";
             let token = localStorage.getItem("token");
+            $("#step3-final").removeClass("d-none");
 
             $.ajax({
               type: "POST",

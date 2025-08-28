@@ -630,13 +630,14 @@
     </section>
     <!-- New Arrivals Enddd  -->
 
-    <!-- Hot Sale  Start  -->
+
+    <!-- Hot sales Start  -->
     <?php if (count($hotsale) <= 0) {
         $class = "hide-hotsale";
     } else {
         $class = "";
     } ?>
-    <section id="section-hotsale" class="px-5 <?php echo $class; ?>">
+    <section id="section-newArrival" class="p-5 <?php echo $class; ?>">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12 text-center newarrival_header">
@@ -644,10 +645,10 @@
                     <a href="<?php echo base_url(); ?>hotsale/1"><span class="view_all">View all<i
                                 class="right_arrow"></i></span></a>
                 </div>
-                <div class="col-12 col-carousel">
-                    <div class="owl-carousel carousel-main hotsale_carousel">
-                        <?php for ($i = 0; $i < 4; $i++) { ?>
-                            <div class="items_wrapper">
+                <div class="col-12 col-carousel p-0">
+                    <div class="owl-carousel carousel-main">
+                        <?php for ($i = 0; $i < 8; $i++) { ?>
+                            <div class="">
                                 <div class="item">
                                     <p class="d-flex wish-status m-0">
                                         <span class="d-flex align-items-center">
@@ -656,7 +657,8 @@
                                             </span>
                                         </span>
                                     </p>
-                                    <div class="items_wrapper hotsale-ribbon">
+
+                                    <div class="items_wrapper">
                                         <?php
                                         $tbl_name = $hotsale[$i]['tbl_name'];
                                         if ($tbl_name == "tbl_products") {
@@ -674,6 +676,9 @@
                                         }
                                         ?>
                                         <a href="<?php echo $url; ?>">
+                                            <div class="container left" data-ribbon="Pormotion"
+                                                style="--d:10px;--c:green;--f:13px">
+                                            </div>
                                             <div class="de-item">
                                                 <?php if (!empty($hotsale[$i]['offer_details']) && $hotsale[$i]['offer_details'] !== "0") { ?>
                                                     <div class="star-12">
@@ -687,10 +692,11 @@
                                                     <img src="<?php echo base_url(); ?>/<?php echo $hotsale[$i]['product_img']; ?>"
                                                         class="img-fluid" alt="<?php echo $hotsale[$i]['product_name']; ?>">
                                                 </div>
-                                                <div class="d-info">
+                                                <div class="d-info" id="index-offer">
                                                     <div class="d-text">
                                                         <h4><?php echo $hotsale[$i]['product_name']; ?></h4>
-                                                        <div>
+
+                                                        <div class="mt-2">
                                                             <?php
                                                             $tbl_name = $hotsale[$i]['tbl_name'];
                                                             if ($tbl_name == "tbl_products") {
@@ -730,7 +736,8 @@
             </div>
         </div>
     </section>
-    <!-- Hot Sale  End  -->
+    <!-- Hot Sales Enddd  -->
+
 
 
     <!-- <section id="section-hotsale" class="px-5 <?php echo $class; ?>">

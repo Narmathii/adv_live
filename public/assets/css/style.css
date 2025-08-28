@@ -1593,7 +1593,7 @@ header.header-mobile {
     position: fixed !important;
     background: #fff;
     top: 0;
-    padding-bottom: 10px;
+    padding-bottom: 15px;
 }
 
 header.header-mobile.menu-open{

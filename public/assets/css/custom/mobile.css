@@ -106,9 +106,13 @@
   #section-brands h2 {
     font-size: 20px;
   }
-      .view_all {
-        top: 10px;
-      }
+  .view_all {
+    position: relative;
+    z-index: 10; /* keep it above overlapping elements */
+    cursor: pointer;
+    display: inline-block;
+    pointer-events: auto;
+  }
 }
 
 /* Mobile (Landscape) and small phones */
@@ -169,7 +173,7 @@
     height: 188px;
     position: absolute;
     top: -26px;
-    left: 11px;
+    left: 0;
     overflow: hidden;
     text-transform: uppercase;
     color: #fff;
@@ -192,6 +196,9 @@
     transition: all 0.6s ease;
     width: 100px;
     margin-top: 10px;
+    z-index: 10;
+    cursor: pointer;
+    pointer-events: auto;
   }
   #section-brands h2,
   #section-offers h2 {
@@ -244,7 +251,7 @@
   }
 
   .ribbon {
-    left: 35px;
+    left: 6px;
   }
   .ribbon span {
     left: -45px;
@@ -271,55 +278,62 @@
 
 /* Menuuuu */
 
-/* Tab */
+/* Tablets (landscape) */
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
   .menu__inner {
-    margin-top: 8px !important;
+    margin-top: 2% !important;
   }
   .menu {
     width: auto;
-    margin-top: -131px;
+    margin-top: -8rem; /* better than -131px */
   }
   .brand img {
     width: auto;
-    height: 92px;
+    height: 5.75rem; /* ~92px */
   }
 }
 
-@media only screen and (min-width: 1025px) and (max-width: 1440px) {
+/* Small desktops & laptops */
+@media only screen and (min-width: 1025px) and (max-width: 1439px) {
   .menu__inner {
-    margin-top: 130px !important;
+    margin-top: 9% !important;
   }
   .menu {
     width: auto;
-    margin-top: -131px;
+    margin-top: -8rem;
   }
   .brand img {
     width: auto;
-    height: 92px !important;
+    height: 5.75rem !important;
   }
 }
 
-@media only screen and (min-width: 1440px) and ((max-width: 1919px)) {
+/* Large desktops */
+@media only screen and (min-width: 1440px) and (max-width: 1919px) {
+  .menu__inner {
+    margin-top: 0.5rem !important;
+  }
   .menu {
     width: auto;
-    margin-top: -10px !important;
+    margin-top: -0.6rem !important;
   }
-
   .brand img {
-    height: 102px !important;
-    margin-top: -3px !important;
+    height: 6.4rem !important; /* ~102px */
+    margin-top: -0.2rem !important;
   }
 }
 
-@media only screen and (min-width: 1920px) and ((max-width: 2560px)) {
+/* Extra large desktops / 2K screens */
+@media only screen and (min-width: 1920px) and (max-width: 2560px) {
+  .menu__inner {
+    margin-top: 0;
+  }
   .menu {
     width: auto;
-    margin-top: 0px !important;
+    margin-top: 0 !important;
   }
-
   .brand img {
-    height: 100px !important;
-    margin-top: -3px !important;
+    height: 6.25rem !important; /* ~100px */
+    margin-top: -0.2rem !important;
   }
 }

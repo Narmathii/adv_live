@@ -434,7 +434,7 @@ require("components/head.php");
   ?>
   <!-- content begin -->
   <section class="pb-0 px-5 cartlist-container">
-    <div id="container" class="container  ">
+    <div id="container" class="container">
       <div class="progress_bar">
         <div class="progress px-1" style="height: 3px;">
           <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0"
@@ -451,66 +451,43 @@ require("components/head.php");
       <form id="multi-step-form">
         <div class="step step-1">
           <section class="h-100 gradient-custom p-0">
-            <div class="container ">
+            <div class="container">
               <h5 class="mb-0 cart_head">My Orders</h5>
               <div class="row d-flex justify-content-center my-4">
                 <div class="col-md-8">
                   <div class="card mb-4">
-                    <!-- <div class="card-header py-3">
-                    </div> -->
                     <div class="card-body">
-                      <!-- Single item -->
                       <?php if ($cart_count != 0) { ?>
-                        <?php for ($i = 0; $i < count($cart_product); $i++) {
-                          ?>
+                        <?php for ($i = 0; $i < count($cart_product); $i++) { ?>
                           <div class="row">
                             <div class="col-lg-2 col-md-12 mb-4 mb-lg-0">
-                              <!-- Image -->
                               <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                                <img src="<?php echo base_url() ?><?php echo $cart_product[$i]->config_image1 ?>"
-                                  class="w-100" alt="<?php echo $cart_product[$i]->product_name ?>" />
+                                <img src="<?php echo base_url() . $cart_product[$i]->config_image1; ?>" class="w-100"
+                                  alt="<?php echo $cart_product[$i]->product_name; ?>" />
                                 <a href="#!">
                                   <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
                                 </a>
                               </div>
-                              <!-- Image -->
                             </div>
 
                             <div class="col-lg-6 col-md-6 mb-4 mb-lg-0">
-                              <!-- Data -->
-                              <p class="product_name"><strong>
-                                  <?php echo $cart_product[$i]->product_name ?>
-                                </strong></p>
-
-                              <?php
-                              $sizeVal = $cart_product[$i]->size;
-                              if ($sizeVal != '0') { ?>
+                              <p class="product_name"><strong><?php echo $cart_product[$i]->product_name; ?></strong></p>
+                              <?php $sizeVal = $cart_product[$i]->size;
+                              if ($sizeVal != "0") { ?>
                                 <div class="mycart_product_wrap">
                                   <div class="product_item">
                                     <div class="d-flex">
                                       <p class="m-0">Size:</p>
                                       <ul>
-
-                                        <li></li>
-                                        &nbsp;<?php echo $cart_product[$i]->size ?>
-
+                                        <li></li>&nbsp;<?php echo $cart_product[$i]->size; ?>
                                       </ul>
                                     </div>
-
-
                                   </div>
                                 </div>
                               <?php } ?>
-
-                              <!-- Data -->
                             </div>
 
                             <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-                              <!-- Quantity -->
-
-
-                              <!-- CSRF Token -->
-
                               <?php
                               $size_stock = $cart_product[$i]->size_stock;
                               if ($size_stock != 0) {
@@ -519,42 +496,41 @@ require("components/head.php");
                                 $final_stock = $cart_product[$i]->total_stock;
                               }
                               ?>
+                              <input type="hidden" name="<?php echo csrf_token(); ?>" value="<?php echo csrf_hash(); ?>" />
 
-                              <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" />
-                              <div class="d-flex mb-4 " style="max-width: 300px">
+                              <div class="d-flex mb-4" style="max-width: 300px">
                                 <button type="button" class="btn px-3 me-2 ripple-surface btn-decrement"
-                                  cart_id_data="<?php echo $cart_product[$i]->cart_id ?>">
+                                  cart_id_data="<?php echo $cart_product[$i]->cart_id; ?>">
                                   <i class="icon_minus_alt2"></i>
                                 </button>
-
                                 <div class="form-outline">
-                                  <input min="1" step="1" name="quantity" value="<?php echo $cart_product[$i]->quantity ?>"
-                                    type="number" class="form-control quantity_<?php echo $cart_product[$i]->cart_id ?>"
+                                  <input min="1" step="1" name="quantity" value="<?php echo $cart_product[$i]->quantity; ?>"
+                                    type="number" class="form-control quantity_<?php echo $cart_product[$i]->cart_id; ?>"
                                     readonly />
                                   <label class="form-label">Quantity</label>
                                 </div>
-
                                 <button type="button" class="btn ripple-surface px-3 ms-2 btn-increment"
-                                  cart_id_data="<?php echo $cart_product[$i]->cart_id ?>"
-                                  data-stock="<?php echo $final_stock ?>">
+                                  cart_id_data="<?php echo $cart_product[$i]->cart_id; ?>"
+                                  data-stock="<?php echo $final_stock; ?>">
                                   <i class="icon_plus_alt2"></i>
                                 </button>
                               </div>
-                              <!-- Quantity -->
 
-                              <!-- Price -->
-                              <input type="hidden" class="cart-price  offer_<?php echo $cart_product[$i]->cart_id ?>"
-                                value="<?php echo $cart_product[$i]->offer_price ?>" />
+                              <input type="hidden" class="cart-price offer_<?php echo $cart_product[$i]->cart_id; ?>"
+                                value="<?php echo $cart_product[$i]->offer_price; ?>" />
+
                               <p class="text-start text-md-center">
-                                <strong><span id="display_price_amt"
-                                    class="m-0 display-price  disp_<?php echo $cart_product[$i]->cart_id ?>">₹
-                                    <?php echo number_format($cart_product[$i]->sub_total) ?>
-                                  </span></strong>
+                                <strong>
+                                  <span id="display_price_amt"
+                                    class="m-0 display-price disp_<?php echo $cart_product[$i]->cart_id; ?>">₹
+                                    <?php echo number_format($cart_product[$i]->sub_total); ?>
+                                  </span>
+                                </strong>
                               </p>
+
                               <a class="trigger-btn m-0 btnDlt" data-toggle="modal"
-                                dlt_id="<?php echo $cart_product[$i]->cart_id ?>">
+                                dlt_id="<?php echo $cart_product[$i]->cart_id; ?>">
                                 <i class="icon_trash"></i></a>
-                              <!-- Price -->
                             </div>
                           </div>
                           <hr class="my-4" />
@@ -562,24 +538,22 @@ require("components/head.php");
                       <?php } else { ?>
                         <div class="row">
                           <div class="col-lg-12 col-md-6 mb-4 mb-lg-0">
-                            <span class="text-center justify-content-center" id="empty-cart"><i
-                                class="fa fa-shopping-cart"></i></span>
-                            <h3 class="product_name text-center"><strong>
-                                Your Cart is Empty!!!
-                              </strong>
-                            </h3>
+                            <span class="text-center justify-content-center" id="empty-cart">
+                              <i class="fa fa-shopping-cart"></i>
+                            </span>
+                            <h3 class="product_name text-center"><strong>Your Cart is Empty!!!</strong></h3>
                           </div>
                         </div>
                       <?php } ?>
                     </div>
                   </div>
-                  <div class="card mb-12" style="background-size: 100%; background-repeat: no-repeat;">
-                    <div class="card-body" style="background-size: 100%; background-repeat: no-repeat;">
-                      <div class="row" style="background-size: 100%; background-repeat: no-repeat;">
-                        <div class="coupon_wrapper" style="background-size: 100%; background-repeat: no-repeat;">
-                          <!-- <label for="coupon_field">Coupon</label> -->
+
+                  <div class="card mb-12">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="coupon_wrapper">
                           <p>Coupon</p>
-                          <div class="coupon-row" style="background-size: 100%; background-repeat: no-repeat;">
+                          <div class="coupon-row">
                             <span id="cpnCode">Coming Soon !</span>
                             <span id="cpnBtn">Apply Code</span>
                           </div>
@@ -588,33 +562,24 @@ require("components/head.php");
                     </div>
                   </div>
                 </div>
+
+                <!-- Price details -->
                 <div class="col-md-4">
                   <div class="card mb-4">
                     <div class="card-header py-3">
                       <h5 class="mb-0">Price details</h5>
                     </div>
                     <div class="card-body">
-                      <!-- <form id="checkout-form"> -->
                       <ul class="list-group list-group-flush">
                         <li
                           class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                          <?php
-                          $Itemview = ($total_items > 1) ? 'Items' : 'Item' ?>
-                          Price (<?= $total_items ?> <?= $Itemview ?> )
+                          <?php $Itemview = $total_items > 1 ? "Items" : "Item"; ?>
+                          Price (<?php echo $total_items . " " . $Itemview; ?>)
                           <span class="m-0 total_amt_cal"></span>
                         </li>
-                        <!-- <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                          Shipping
-                          <span>0</span>
-                        </li> -->
                         <li
                           class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-                          <div>
-                            <strong>Total amount</strong>
-                            <!-- <strong>
-                              <p class="mb-0">(including VAT)</p>
-                            </strong> -->
-                          </div>
+                          <div><strong>Total amount</strong></div>
                           <span><strong id="total-amt" class="total_amt_cal"></strong></span>
                         </li>
                       </ul>
@@ -623,96 +588,74 @@ require("components/head.php");
                       </a>
                     </div>
                   </div>
-                  <!-- <div class="continue_shopping">
-                    <a href="<?php echo base_url() ?>" type="button"
-                      class="btn btn-lg btn-block continue_shoppingBtn pay_btn">
-                      <i class="arrow_left me-2"></i>Continue Shopping
-
-                    </a>
-                  </div> -->
                 </div>
               </div>
             </div>
           </section>
         </div>
+
+        <!-- STEP 2: Address -->
         <div class="step step-2">
           <div class="section-empty">
             <div class="container content">
               <div class="row justify-content-center p-0">
-                <?php require("components/addressForm.php"); ?>
+                <?php require "components/addressForm.php"; ?>
                 <div class="container">
                   <div class="row">
                     <?php if (!empty($address)) { ?>
                       <div class="col-12 col-lg-8 mx-auto">
                         <div class="add_container d-flex">
-                          <!-- <a class="btn btn-sm w-100 add-address">Add new address</a> -->
                           <a class="btn btn-sm w-100 add-address"><i class="fas fa-plus me-1"></i> Add new address</a>
-
                           <h4 class="text-center mb-4">Delivery Address</h4>
                         </div>
-
                         <?php foreach ($address as $i => $addr) {
-                          $defaultAddress = $addr['default_addr'];
+                          $defaultAddress = $addr["default_addr"];
                           $checkedSts = $defaultAddress ? "checked" : "";
                           ?>
                           <div class="address_detail d-flex flex-column flex-lg-row mb-3">
                             <div class="col-12 col-lg-9">
                               <div class="acc_panel">
                                 <input class="form-check-input address-radio mb-2" type="radio"
-                                  data-dist_id="<?= $addr['dist_id'] ?>" name="default_addr" id="<?= $addr['add_id'] ?>"
-                                  <?= $checkedSts ?> />
+                                  data-dist_id="<?php echo $addr["dist_id"]; ?>" name="default_addr"
+                                  id="<?php echo $addr["add_id"]; ?>" <?php echo $checkedSts; ?> />
                                 <div class="d-text address-field">
-                                  <p class="fw-bold"><?= $addr['username'] ?></p>
-                                  <p><?= $addr['address'] ?>, <?= $addr['landmark'] ?></p>
-                                  <p><?= $addr['city'] ?>, <?= $addr['dist_name'] ?>, <?= $addr['state_title'] ?> -
-                                    <?= $addr['pincode'] ?>
+                                  <p class="fw-bold"><?php echo $addr["username"]; ?></p>
+                                  <p><?php echo $addr["address"] . ", " . $addr["landmark"]; ?></p>
+                                  <p>
+                                    <?php echo $addr["city"] . ", " . $addr["dist_name"] . ", " . $addr["state_title"] . " - " . $addr["pincode"]; ?>
                                   </p>
-                                  <p>Mobile Number: <span><?= $addr['number'] ?></span></p>
+                                  <p>Mobile Number: <span><?php echo $addr["number"]; ?></span></p>
                                 </div>
                               </div>
                             </div>
                             <div class="col-12 col-lg-3 text-end mt-2 mt-lg-0 change_btn">
-                              <a class="btn btn-sm w-100 change-address" data-id="<?= $addr['add_id'] ?>"
-                                data-index="<?= $i ?>">Change</a>
+                              <a class="btn btn-sm w-100 change-address" data-id="<?php echo $addr["add_id"]; ?>"
+                                data-index="<?php echo $i; ?>">Change</a>
                             </div>
                           </div>
                         <?php } ?>
                       </div>
+
                       <div class="col-12 col-lg-4 pt-4">
-                        <h4 class="text-center mt-1 mb-5" style="margin-bottom:2rem !important">Email</h4>
+                        <h4 class="text-center mt-1 mb-5">Email</h4>
                         <div class="mail-container">
-                          <div class="email_detail d-flex flex-column flex-lg-column mb-3  add_email d-none">
-                            <div class="col-12 col-lg-12 ">
-                              <div class="acc_panel">
-                                <input class="form-control mb-2" type="text" name="email" id="email-check"
-                                  placeholder="email">
-                              </div>
-                            </div>
-                            <div class="col-12 col-lg-12 text-end mt-2 mt-lg-0">
-                              <a class="btn btn-sm w-100 submit-email" id="submit-email">Submit</a>
-                            </div>
+                          <div class="email_detail add_email d-none">
+                            <input class="form-control mb-2" type="text" name="email" id="email-check"
+                              placeholder="email">
+                            <a class="btn btn-sm w-100 submit-email" id="submit-email">Submit</a>
                           </div>
-
-                          <div class="email_detail d-flex flex-column flex-lg-column mb-3  change_email d-none">
-                            <div class="col-12 col-lg-12">
-                              <div class="acc_panel">
-                                <input class="form-control mb-2" type="text" name="email" id="change-email-ip" value="">
-                              </div>
-                            </div>
-                            <div class="col-12 col-lg-12 text-end mt-2 mt-lg-0">
-                              <a class="btn btn-sm w-100 submit-email" id="change-email-btn">Change Email</a>
-                            </div>
+                          <div class="email_detail change_email d-none">
+                            <input class="form-control mb-2" type="text" name="email" id="change-email-ip" value="">
+                            <a class="btn btn-sm w-100 submit-email" id="change-email-btn">Change Email</a>
                           </div>
-
                           <h4 class="text-start mt-5 mb-4 ps-3">Select Courier Option</h4>
                           <div class="couriercharge">
                             <?php foreach ($courier_type as $type) { ?>
                               <div class="acc_panel mb-2">
                                 <input class="form-check-input courier-type" type="radio" name="courier_option"
-                                  id="<?= $type['courier_id'] ?>" value="<?= $type['courier_id'] ?>" />
-                                <label class="form-check-label ms-3" for="<?= $type['courier_id'] ?>">
-                                  <?= $type['courier_name'] ?>
-                                </label>
+                                  id="<?php echo $type["courier_id"]; ?>" value="<?php echo $type["courier_id"]; ?>" />
+                                <label class="form-check-label ms-3"
+                                  for="<?php echo $type["courier_id"]; ?>"><?php echo $type["courier_name"]; ?></label>
                               </div>
                             <?php } ?>
                             <div class="acc_panel mb-2">
@@ -723,11 +666,10 @@ require("components/head.php");
                           </div>
                         </div>
                       </div>
-                      <input type="hidden" id="cart-state-id" value="<?php echo $defaultState[0]['state_id'] ?>" />
+                      <input type="hidden" id="cart-state-id" value="<?php echo $defaultState[0]["state_id"]; ?>" />
                       <div class="action_btn text-center mt-4">
                         <button type="button" class="btn btn-primary me-2 prev-step">Previous</button>
-                        <button type="button" class="btn btn-success next-step" district_id=""
-                          id="prod-detail">Next</button>
+                        <button type="button" class="btn btn-success next-step" id="prod-detail">Next</button>
                       </div>
                     <?php } ?>
                   </div>
@@ -737,41 +679,29 @@ require("components/head.php");
           </div>
         </div>
 
-
-        <div class="step step-3 row justify-content-center">
+        <!-- STEP 3 -->
+        <div class="step step-3 row justify-content-center d-none" id="step3-final">
           <p class="billing_text">Your Orders</p>
           <div class="step_3_wrapper col-lg-11 mb-5">
             <div class="yourCart_div">
               <div class="cart_img_content">
-                <!-- start -->
-                <?php for ($i = 0; $i < count($cart_product); $i++) {
-                  ?>
+                <?php for ($i = 0; $i < count($cart_product); $i++) { ?>
                   <div class="food_img_price_des">
                     <div class="cart_food_img">
-                      <img src="<?php echo base_url() ?><?php echo $cart_product[$i]->config_image1 ?>"
-                        alt="<?php echo $cart_product[$i]->product_name ?>">
+                      <img src="<?php echo base_url() . $cart_product[$i]->config_image1; ?>"
+                        alt="<?php echo $cart_product[$i]->product_name; ?>">
                     </div>
                     <div class="food_dec_flex">
-                      <p><?php echo $cart_product[$i]->product_name ?></p>
-
-
-                      <p class="disp_<?php echo $cart_product[$i]->cart_id ?>">
-                        ₹<?php echo number_format($cart_product[$i]->sub_total) ?>
+                      <p><?php echo $cart_product[$i]->product_name; ?></p>
+                      <p class="disp_<?php echo $cart_product[$i]->cart_id; ?>">
+                        ₹<?php echo number_format($cart_product[$i]->sub_total); ?>
                       </p>
                     </div>
                   </div>
-                  <div> <?php
-                  $sizeVal = $cart_product[$i]->size;
-
-                  if ($sizeVal != '0') { ?>
-
-                      <p> Size :<?php echo $cart_product[$i]->size ?></p>
-
-                    <?php } ?>
-                  </div>
-
+                  <?php if ($cart_product[$i]->size != "0") { ?>
+                    <p>Size: <?php echo $cart_product[$i]->size; ?></p>
+                  <?php } ?>
                 <?php } ?>
-                <!-- end -->
               </div>
             </div>
 
@@ -780,40 +710,31 @@ require("components/head.php");
                 <p>Total</p>
                 <p id="step3-totalamt" class="total_amt_cal"></p>
               </div>
-              <!-- <div class="price_total">
-
-                <p>Shipping</p>
-                <p>free</p>
-              </div> -->
-              <!-- <div class="price_total">
-                <p>Discount</p>
-                <p>0</p>
-              </div> -->
               <div class="price_total">
                 <p>Courier Charges</p>
                 <p id="courier-charge"></p>
               </div>
             </div>
+
             <input type="hidden" id="final_total" name="final_total">
+
             <button type="button" class="total_btn_cart">
               <span>Total Payable</span>
               <span id="step3-totalamt" class="total_amt_cal overAllTotalValue"></span>
             </button>
 
             <div class="confirm_order mt-3">
-              <button type="button" class="continue_shoppingBtn pay_btn prev-step me-4"><i
-                  class="arrow_left me-2"></i>Go
-                Orders</button>
-              <!-- <a type="submit" class="total_btn_cart text_center_button place_order btn-success" id="buy-now">Buy
-                Now</a> -->
+              <button type="button" class="continue_shoppingBtn pay_btn prev-step me-4">
+                <i class="arrow_left me-2"></i>Go Orders
+              </button>
               <a type="submit" class="total_btn_cart text_center_button place_order btn-success" id="buy-now">Buy
                 Now</a>
             </div>
-            <div class="place_order_wrapper">
-            </div>
+            <div class="place_order_wrapper"></div>
           </div>
         </div>
       </form>
+
     </div>
 
 
@@ -842,8 +763,10 @@ require("components/head.php");
                           <option value="">Select State</option>
                           <?php for ($i = 0; $i < count($state); $i++) { ?>
 
-                            <option value="<?php echo $state[$i]['state_id'] ?>">
-                              <?php echo $state[$i]['state_title'] ?>
+                            <option value="<?php echo $state[$i][
+                              "state_id"
+                            ]; ?>">
+                              <?php echo $state[$i]["state_title"]; ?>
                             </option>
                           <?php } ?>
                         </select>
@@ -996,7 +919,9 @@ require("components/head.php");
       });
     });
   </script>
-  <script> function displayStep(stepNumber) {
+  <script>
+
+    function displayStep(stepNumber) {
       if (stepNumber >= 1 && stepNumber <= 3) {
         $(".step-" + currentStep).hide();
         $(".step-" + stepNumber).show();
@@ -1006,6 +931,9 @@ require("components/head.php");
     }</script>
 
   <script>
+    $(document).ready(function () {
+
+    })
 
   </script>
 </body>

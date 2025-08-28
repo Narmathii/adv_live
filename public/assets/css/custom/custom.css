@@ -3738,9 +3738,6 @@ h3 {
     justify-content: space-around;
   } */
 
-  .view_all:hover {
-    display: none;
-  }
 
   .fa-angle-left::before {
     color: #fff !important;
@@ -5422,7 +5419,7 @@ a {
     /* margin-top: 0; */
     color: #000 !important;
     height: 48px;
-    padding: 4px;
+    padding: 0;
     font-size: 12px !important;
     margin-top: 10px !important;
     margin-bottom: 0 !important;
