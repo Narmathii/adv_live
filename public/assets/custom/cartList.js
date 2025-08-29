@@ -147,7 +147,12 @@ $(document).ready(function () {
             stack: false,
             showHideTransition: "fade",
           });
-          location.reload();
+          setTimeout(function () {
+            $(".step-1").hide();
+            $(".step-2").show();
+            $(".step").removeClass("active");
+            $(".step-2").addClass("active");
+          }, 1200);
         }
         if (data.code == 400) {
           $.toast({
@@ -161,7 +166,12 @@ $(document).ready(function () {
             stack: false,
             showHideTransition: "fade",
           });
-          location.reload();
+          setTimeout(function () {
+            $(".step-1").hide();
+            $(".step-2").show();
+            $(".step").removeClass("active");
+            $(".step-2").addClass("active");
+          }, 1200);
         }
       },
       error: function (error) {
@@ -295,11 +305,7 @@ $(document).ready(function () {
       cache: false,
       headers: { Authorization: "Bearer " + token },
       success: function (resultData) {
-        // var resultData = $.parseJSON(data);
-
         if (resultData.code == 200) {
-          // changeCSRF(resultData.csrf);
-          // update_csrf_fields(resultData.csrf_test_name);
           $.toast({
             icon: "success",
             heading: "Success",
@@ -311,9 +317,10 @@ $(document).ready(function () {
             stack: false,
             showHideTransition: "fade",
           });
-          location.reload();
+          setTimeout(function () {
+            location.reload();
+          }, 1200);
         } else {
-          // changeCSRF(resultData.csrf);
           $.toast({
             icon: "warning",
             heading: "warning",

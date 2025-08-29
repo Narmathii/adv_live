@@ -21,10 +21,10 @@ require("components/head.php");
   .change-address,
   .submit-email,
   .add-address {
-    color: #a1c335;
+    color: #829b2f;
     text-transform: capitalize;
 
-    background-color: #a1c335;
+    background-color: #829b2f;
     color: #fff !important;
 
   }
@@ -38,7 +38,7 @@ require("components/head.php");
   }
 
   .change-address:hover {
-    box-shadow: 0 2px 5px 0 #a1c335, 0 2px 10px 0 #a1c335 !important;
+    box-shadow: 0 2px 5px 0 #829b2f, 0 2px 10px 0 #829b2f !important;
 
   }
 
@@ -56,7 +56,7 @@ require("components/head.php");
     font-size: 100px;
     display: block;
     padding: 20px;
-    color: #a4c735 !important;
+    color: #829b2f !important;
 
   }
 
@@ -270,13 +270,13 @@ require("components/head.php");
     border-radius: 50%;
     width: .625rem;
     height: .625rem;
-    border-color: #a1c335;
-    background-color: #a1c335;
+    border-color: #829b2f;
+    background-color: #829b2f;
     margin: 0;
   }
 
   .form-check-input:checked:focus {
-    border-color: #a1c335;
+    border-color: #829b2f;
   }
 
   .form-check-input:checked {
@@ -342,11 +342,11 @@ require("components/head.php");
   }
 
   .address_category {
-    border: 1px solid #a4c735;
+    border: 1px solid #829b2f;
     margin-left: 8px;
     padding: 5px;
     border-radius: 15px;
-    color: #a1c335 !important;
+    color: #829b2f !important;
     text-transform: uppercase;
     font-size: 10px !important;
     font-weight: 600;
@@ -354,6 +354,87 @@ require("components/head.php");
 
   .address_status {
     margin: 30px 0 10px;
+  }
+
+  .change_btn {
+    position: relative;
+  }
+
+  .change-address {
+    text-transform: capitalize;
+    position: absolute;
+    /* anchor inside the parent */
+    background-color: #829b2f;
+    color: #fff !important;
+    right: 10px;
+    /* spacing from right edge */
+    bottom: 10px;
+    /* spacing from bottom edge */
+    width: 120px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 25px;
+  }
+
+
+
+  @media only screen and (max-width: 391px) {
+    .change-address {
+      width: 39px !important;
+      height: 36px;
+      border-radius: 5px;
+      font-size: 0;
+      /* hides "Change" text */
+      padding: 0;
+      margin-left: 80%;
+    }
+
+    .change-address i {
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .food_img_price_des .food_dec_flex p,
+    .cart_total .price_total p {
+
+      font-size: 14px;
+    }
+
+    h4 {
+      font-size: 20px;
+    }
+
+    .action_btn .prev-step,
+    .action_btn .next-step {
+
+      font-size: 14px;
+      align-items: center;
+    }
+
+
+
+  }
+
+  @media only screen and (min-width: 392px) and (max-width: 425px) {
+        .change-address {
+        width: 39px !important;
+        height: 36px;
+        border-radius: 5px;
+        font-size: 0;
+        padding: 0;
+        top: ;
+        margin-top: -11%;
+        margin-right: 6%;
+        }
+
+    .change-address i {
+      font-size: 16px;
+      margin: 0;
+    }
+
+
   }
 </style>
 
@@ -515,7 +596,7 @@ require("components/head.php");
                         </div>
                         <div class="col-12 col-lg-3 text-end mt-2 mt-lg-0">
                           <a class="btn btn-sm w-100 change-address" data-id="<?= $addr['add_id'] ?>"
-                            data-index="<?= $i ?>">Change</a>
+                            data-index="<?= $i ?>">Change&nbsp;<i class="fas fa-edit"></i></a>
                         </div>
                       </div>
                     <?php } ?>
@@ -530,9 +611,9 @@ require("components/head.php");
                 }
                 ?>
                 <div class="col-12 col-lg-7 mx-auto add_container <?= $dispAddClass ?>">
-                  <div class="col-12 col-lg-3 text-end mt-2 mt-lg-0 justify-content-end">
-                    <a class="btn btn-sm w-100 add-address">Add</a>
-                  </div>
+
+                  <a class="btn btn-sm w-100 add-address"><i class="fas fa-plus me-1"></i> Add new address</a>
+
                 </div>
                 <div class="col-12 col-lg-7 mt-5 <?= $dispAddClass ?>">
                   <h4 class="text-center mb-5">Select Courier Option</h4>
@@ -578,7 +659,8 @@ require("components/head.php");
                   ?>
                   <div class="food_img_price_des">
                     <div class="cart_food_img">
-                      <img src="<?php echo base_url() ?><?php echo $buynow[$i]['config_image1'] ?>" alt="<?php echo $buynow[$i]['product_name'] ?>">
+                      <img src="<?php echo base_url() ?><?php echo $buynow[$i]['config_image1'] ?>"
+                        alt="<?php echo $buynow[$i]['product_name'] ?>">
                     </div>
                     <div class="food_dec_flex">
                       <p><?php echo $buynow[$i]['product_name'] ?></p>

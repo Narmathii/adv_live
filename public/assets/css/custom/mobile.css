@@ -79,6 +79,61 @@
   #section-hotsale .items_wrapper {
     width: 0;
   } */
+
+  .change-address {
+    top: 2px !important;
+    right: -28px !important;
+    bottom: 0;
+    width: 39px !important;
+    height: 36px;
+    border-radius: 5px !important;
+  }
+
+  .change_btn .change-address {
+    font-size: 0;
+  }
+
+  .change_btn .change-address i {
+    font-size: 16px;
+    margin-left: 0;
+  }
+  .ribbon {
+    top: -25px;
+    left: 0;
+  }
+
+  #cpnBtn {
+    border: 1px solid #000;
+    background: #000;
+    padding: 10px 7px;
+    color: #fff !important;
+    cursor: pointer;
+  }
+
+  .d-text.address-field {
+    font-size: 12px;
+    padding: 3px;
+  }
+  .share-btn {
+    right: 10%;
+    margin-top: 8% !important;
+  }
+  .btn-fullwidth {
+    font-size: 14px !important;
+  }
+
+  .addto_cart div {
+    margin: 1px;
+  }
+  .btn-detail div {
+    padding: 2px;
+    margin: 10px 0;
+  }
+
+  /* .tab-default .tab-content {
+    margin-top: 20px;
+    text-align: justify;
+  } */
 }
 @media only screen and (max-width: 768px) {
   .add-address {
@@ -106,17 +161,35 @@
   #section-brands h2 {
     font-size: 20px;
   }
-  .view_all {
-    position: relative;
-    z-index: 10; /* keep it above overlapping elements */
-    cursor: pointer;
-    display: inline-block;
-    pointer-events: auto;
-  }
 }
 
 /* Mobile (Landscape) and small phones */
 @media only screen and (min-width: 425px) and (max-width: 767px) {
+  .change_btn .change-address {
+    font-size: 0;
+  }
+
+  .change_btn .change-address i {
+    font-size: 16px;
+    margin-left: 0;
+  }
+
+  .change-address {
+    text-transform: capitalize;
+    position: absolute !important;
+    background-color: #829b2f;
+    color: #fff !important;
+    top: 2px !important;
+    right: -28px !important;
+    bottom: 0;
+    width: 39px !important;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+  }
+
   #section-newArrival .owl-carousel.owl-drag .owl-item {
     /* padding-left: 15px; */
     /* padding: 3px !important; */

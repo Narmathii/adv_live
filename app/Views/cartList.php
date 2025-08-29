@@ -65,10 +65,10 @@ require("components/head.php");
 
   }
 
-  .mail-container>.add_email,
+  /* .mail-container>.add_email,
   .mail-container>.change_email {
     display: none;
-  }
+  } */
 
 
 
@@ -423,6 +423,29 @@ require("components/head.php");
   .cartlist-container {
     padding-top: 75px !important;
   }
+
+  @media only screen and (max-width: 425px) {
+    .change-address {
+      top: 2px !important;
+      right: -28px !important;
+      bottom: 0;
+      width: 39px !important;
+      height: 36px;
+      border-radius: 5px !important;
+    }
+
+
+    .food_img_price_des .food_dec_flex p,
+    .cart_total .price_total p {
+
+      font-size: 14px;
+    }
+
+    h4 {
+      font-size: 20px;
+    }
+
+  }
 </style>
 
 <body id="cartlist_page" class="dark-scheme">
@@ -628,9 +651,12 @@ require("components/head.php");
                                 </div>
                               </div>
                             </div>
+
+                            <?php ?>
                             <div class="col-12 col-lg-3 text-end mt-2 mt-lg-0 change_btn">
                               <a class="btn btn-sm w-100 change-address" data-id="<?php echo $addr["add_id"]; ?>"
-                                data-index="<?php echo $i; ?>">Change</a>
+                                data-index="<?= $i ?>">Change&nbsp;<i class="fas fa-edit"></i>
+                              </a>
                             </div>
                           </div>
                         <?php } ?>
@@ -639,12 +665,12 @@ require("components/head.php");
                       <div class="col-12 col-lg-4 pt-4">
                         <h4 class="text-center mt-1 mb-5">Email</h4>
                         <div class="mail-container">
-                          <div class="email_detail add_email d-none">
+                          <div class="email_detail add_email ">
                             <input class="form-control mb-2" type="text" name="email" id="email-check"
                               placeholder="email">
                             <a class="btn btn-sm w-100 submit-email" id="submit-email">Submit</a>
                           </div>
-                          <div class="email_detail change_email d-none">
+                          <div class="email_detail change_email ">
                             <input class="form-control mb-2" type="text" name="email" id="change-email-ip" value="">
                             <a class="btn btn-sm w-100 submit-email" id="change-email-btn">Change Email</a>
                           </div>
@@ -930,12 +956,7 @@ require("components/head.php");
       }
     }</script>
 
-  <script>
-    $(document).ready(function () {
 
-    })
-
-  </script>
 </body>
 
 </html>

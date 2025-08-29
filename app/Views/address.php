@@ -216,7 +216,7 @@ padding: 10px 20px 10px;
                                                                         <label class="d-block mb-4">
                                                                             <span
                                                                                 class="form-label d-block">District</span>
-                                                                            <div clasmenus="custom-select form-label">
+                                                                            <div class="custom-select form-label">
                                                                                 <select id="dist_id" name="dist_id">
                                                                                     <!-- code -->
                                                                                 </select>
