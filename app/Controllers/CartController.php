@@ -606,34 +606,64 @@ class CartController extends BaseController
     {
         $db = \Config\Database::connect();
 
-
-
-        $qty = $this->request->getPost('quantity');
-        $subTotal = $this->request->getPost('sub_total');
-        $formated = number_format((float) $subTotal, 2, '.', '');
         $cartID = $this->request->getPost('cart_id');
+        $qty = (int) $this->request->getPost('quantity');
+        $userID = session()->get("user_id");
 
 
-        $query = "UPDATE tbl_user_cart SET quantity =?, sub_total = ? 
-                  WHERE cart_id = ?  AND flag = 1 ";
-        $updateData = $db->query($query, [$qty, $formated, $cartID]);
-
-        $affectedRow = $db->affectedRows();
-
-        if ($updateData && $affectedRow == 1) {
-            $res['code'] = 200;
-            $res['status'] = "success";
-            $res['csrf_token'] = csrf_hash();
-            echo json_encode($res);
-        } else {
-            $res['code'] = 400;
-            $res['status'] = "Failure";
-            $res['csrf_token'] = csrf_hash();
-            echo json_encode($res);
+        $getCart = $db->query("SELECT * FROM tbl_user_cart WHERE cart_id = ?", [$cartID])->getRowArray();
+        if (!$getCart) {
+            return json_encode([
+                'code' => 404,
+                'status' => 'Cart item not found',
+                'csrf_token' => csrf_hash()
+            ]);
         }
 
+        $prodID = $getCart['prod_id'];
+        $tableName = $getCart['table_name'];
 
+
+        $getPrice = $db->query("SELECT offer_price FROM `$tableName` WHERE prod_id = ?", [$prodID])->getRowArray();
+        if (!$getPrice) {
+            return json_encode([
+                'code' => 404,
+                'status' => 'Product not found',
+                'csrf_token' => csrf_hash()
+            ]);
+        }
+
+        $price = (float) $getPrice['offer_price'];
+        $subTotal = $qty * $price;
+        $formattedSubTotal = number_format($subTotal, 2, '.', '');
+
+        // Update cart
+        $updateQuery = "UPDATE tbl_user_cart SET quantity = ?, sub_total = ? WHERE cart_id = ? AND flag = 1";
+        $update = $db->query($updateQuery, [$qty, $formattedSubTotal, $cartID]);
+
+        if ($update) {
+
+            // Recalculate full cart total
+            $totalRow = $db->query("SELECT SUM(sub_total) AS total FROM tbl_user_cart WHERE user_id = ? AND flag = 1", [$userID])->getRowArray();
+            $grandTotal = $totalRow['total'] ?? 0;
+            $formattedTotal = number_format($grandTotal, 2, '.', '');
+
+            return json_encode([
+                'code' => 200,
+                'status' => 'success',
+                'sub_total' => $formattedSubTotal,
+                'total' => $formattedTotal,
+                'csrf_token' => csrf_hash()
+            ]);
+        }
+
+        return json_encode([
+            'code' => 400,
+            'status' => 'Failed to update cart',
+            'csrf_token' => csrf_hash()
+        ]);
     }
+
     // ************************************************** UPDATE Address *************************************************************************
 
     public function updateDefaultAddr()

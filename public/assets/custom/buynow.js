@@ -3,6 +3,9 @@
 $(document).ready(function () {
   var mode;
   mode = "new";
+  var emailSubmitted = false;
+
+  var oldEmailID = "";
 
   var states = "";
 
@@ -91,7 +94,24 @@ $(document).ready(function () {
         stack: false,
         showHideTransition: "fade",
       });
+    } else if (
+      $("#email-check").val().trim() != "" &&
+      !$(".add_email").hasClass("d-none") &&
+      emailSubmitted === false
+    ) {
+      $.toast({
+        icon: "error",
+        heading: "Warning",
+        text: "You entered an email but didn’t submit it!",
+        position: "top-right",
+        bgColor: "#red",
+        loader: true,
+        hideAfter: 2000,
+        stack: false,
+        showHideTransition: "fade",
+      });
     } else {
+      emailSubmitted = true;
       insertEmail();
     }
   });

@@ -11,8 +11,8 @@ require("components/head.php");
                 <div class="message-box _success _failed">
                     <i class="fa fa-times-circle" aria-hidden="true"></i>
 
-                    <h3> Your payment was <?php echo $status ?> </h3>
-                    <p><strong>Order id :</strong> <?php echo $order_id ?></p>
+                    <h2> Your payment was Cancelled </h2>
+
 
 
                     <div class="confirm_order">
@@ -25,5 +25,12 @@ require("components/head.php");
         </div>
     </section>
 </body>
+
+<script>
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
 
 </html>

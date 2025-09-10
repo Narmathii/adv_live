@@ -12,9 +12,8 @@ require("components/head.php");
                 <div class="message-box _success">
                     <i class="fa fa-check-circle" aria-hidden="true"></i>
 
-                    <h3>Your payment was <?php echo $status ?></h3>
-                    <p><strong>Order id :</strong> <?php echo $orderid ?></p>
-                    <p><strong>Payment id :</strong> <?php echo $paymentid ?></p>
+                    <h2>Payment Success</h2>
+
                     <div class="confirm_order">
                         <a href="<?php echo base_url() ?>myorders" type="button"
                             class="continue_shoppingBtn pay_btn prev-step me-4">
@@ -26,5 +25,14 @@ require("components/head.php");
         </div>
     </section>
 </body>
+
+
+<script>
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+
+    };
+</script>
 
 </html>

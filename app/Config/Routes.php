@@ -136,9 +136,10 @@ $routes->get('place-order', 'CartCheckoutController::placeOrder', ['filter' => '
 // RazerpayController checkout controller
 $routes->get('payment', 'RazerpayController::payment', ['filter' => 'PaymentAuth']);
 $routes->post('payment-status', 'RazerpayController::paymentstatus');
-$routes->get('payment-cancelled/(:any)', 'RazerpayController::paymentcancel/$1');
-$routes->get('payment-failed/(:any)', 'RazerpayController::paymentfail/$1');
+$routes->get('payment-cancelled', 'RazerpayController::paymentcancel');
+$routes->get('payment-failed', 'RazerpayController::paymentfail');
 $routes->get('success', 'RazerpayController::Success');
+$routes->match(['get', 'post'], 'webhook-payment-status', 'RazerpayController::webhookPaymentStatus');
 
 // $routes->get('success', 'RazerpayController::success');
 

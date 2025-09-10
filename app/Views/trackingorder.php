@@ -31,56 +31,56 @@
 
     
                 <?php for ($i = 0; $i < count($order_detail); $i++) { ?>
-                    <?php
-                    $deliverySts = $order_detail[$i]['delivery_status'];
-                    if ($deliverySts == "New") {
-                        $step = 0;
-                    } else if ($deliverySts == "Pending") {
-                        $step = 1;
-                    } else if ($deliverySts == "Shipped") {
-                        $step = 2;
-                    } else if ($deliverySts == "Delivered") {
-                        $step = 3;
-                    } ?>                                                                                                                                                                                                             
+                            <?php
+                            $deliverySts = $order_detail[$i]['delivery_status'];
+                            if ($deliverySts == "New") {
+                                $step = 0;
+                            } else if ($deliverySts == "Pending") {
+                                $step = 1;
+                            } else if ($deliverySts == "Shipped") {
+                                $step = 2;
+                            } else if ($deliverySts == "Delivered") {
+                                $step = 3;
+                            } ?>                                                                                                                                                                                                             
 
-                    <input type="hidden" id="stepper" value="<?= $step ?>" /> 
-                    <div class="card mb-3 d-flex" style="">
-                        <div class="row g-0">                                                                                  
-                            <div class="col-md-3">
-                                <img class="order_image" src="<?= base_url() ?><?= $order_detail[$i]['config_image1'] ?>"
-                                    class="img-fluid rounded-start" alt="order_image" >   
-                            </div>
+                            <input type="hidden" id="stepper" value="<?= $step ?>" /> 
+                            <div class="card mb-3 d-flex" style="">
+                                <div class="row g-0">                                                                                  
+                                    <div class="col-md-3">
+                                        <img class="order_image" src="<?= base_url() ?><?= $order_detail[$i]['config_image1'] ?>"
+                                            class="img-fluid rounded-start" alt="order_image" >   
+                                    </div>
 
-                            <div class="col-md-9">
-                                <div class="card-body tracking-text">
-                                    <h5 class="card-title">
-                                        <?= $order_detail[$i]['product_name'] ?>
-                                    </h5>
-                                    <p class="card-text">
-                                        Order ID : <?= $order_detail[$i]['order_no'] ?>
-                                    </p>
+                                    <div class="col-md-9">
+                                        <div class="card-body tracking-text">
+                                            <h5 class="card-title">
+                                                <?= $order_detail[$i]['product_name'] ?>
+                                            </h5>
+                                            <p class="card-text">
+                                                Order ID : <?= $order_detail[$i]['order_no'] ?>
+                                            </p>
 
-                                    <?php if ($order_detail[$i]['size'] != "" && $order_detail[$i]['color_name'] != "") {
-                                        $classname = "";
-                                    } else {
-                                        $classname = "d-none";
-                                    }
-                                    ?>
-                                    <p class="card-text  varients ">
-                                        <small class="text-muted <?= $classname ?>">
-                                            Size :<?= $order_detail[$i]['size'] ?>
-                                        </small><br>
-                                        <small class="text-muted color-view <?= $classname ?>">
-                                            Color : <?= $order_detail[$i]['color_name'] ?>
-                                        </small><br>
-                                        <small class="text-muted">
-                                            Quantity : <?= $order_detail[$i]['quantity'] ?>
-                                        </small>
-                                    </p>
+                                            <?php if ($order_detail[$i]['size'] != "" && $order_detail[$i]['color_name'] != "") {
+                                                $classname = "";
+                                            } else {
+                                                $classname = "d-none";
+                                            }
+                                            ?>
+                                            <p class="card-text  varients ">
+                                                <small class="text-muted <?= $classname ?>">
+                                                    Size :<?= $order_detail[$i]['size'] ?>
+                                                </small><br>
+                                                <small class="text-muted color-view <?= $classname ?>">
+                                                    Color : <?= $order_detail[$i]['color_name'] ?>
+                                                </small><br>
+                                                <small class="text-muted">
+                                                    Quantity : <?= $order_detail[$i]['quantity'] ?>
+                                                </small>
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>   
+                            </div>   
                 <?php } ?>
 
 
@@ -88,8 +88,8 @@
                 <?php if (
                     ($order_detail[0]['delivery_status'] == 'New' || $order_detail[0]['delivery_status'] == 'Pending' || $order_detail[0]['delivery_status'] == 'Shipped') && $order_detail[0]['tracking_id'] != ""
                 ) { ?>  
-                                                                             <span class="badge badge-info mb-0">Courier Partner: <?= $order_detail[0]['courier_partner'] ?></span>   
-                                                                             <span class="badge badge-info mb-0">Tracking ID: <?= $order_detail[0]['tracking_id'] ?></span>   
+                                                                                     <span class="badge badge-info mb-0">Courier Partner: <?= $order_detail[0]['courier_partner'] ?></span>   
+                                                                                     <span class="badge badge-info mb-0">Tracking ID: <?= $order_detail[0]['tracking_id'] ?></span>   
                 <?php } ?>
                 <!-- For Tracking ID Display end -->
          
@@ -153,9 +153,9 @@
                 <?php if (
                     ($order_detail[0]['delivery_status'] == 'New' || $order_detail[0]['delivery_status'] == 'Pending' || $order_detail[0]['delivery_status'] == 'Shipped')
                 ) { ?>  
-                                                                                                                    <div class="cancelorder mb-1 text-end">
-                                                                                                                    <a class="mb-1 btn btn-warning text-end" id="cancel-model1"><span class="mb-3 cancel-order" >Cancel Order</span></a>
-                                                                                                                    </div>
+                                                                                                                            <div class="cancelorder mb-1 text-end">
+                                                                                                                            <a class="mb-1 btn btn-warning text-end" id="cancel-model1"><span class="mb-3 cancel-order" >Cancel Order</span></a>
+                                                                                                                            </div>
                 <?php } ?> 
 
 

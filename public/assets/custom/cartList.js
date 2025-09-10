@@ -2,8 +2,9 @@
 
 $(document).ready(function () {
   var mode;
+  var emailSubmitted = false;
 
-  var states = "";
+  var oldEmailID = "";
 
   $("#state_id_val").change(function () {
     let state_id = $(this).val();
@@ -90,6 +91,7 @@ $(document).ready(function () {
         showHideTransition: "fade",
       });
     } else {
+      emailSubmitted = true;
       insertEmail();
     }
   });
@@ -120,6 +122,7 @@ $(document).ready(function () {
         showHideTransition: "fade",
       });
     } else {
+      changeEmailSubmit = true;
       updateEmail();
     }
   });
@@ -346,7 +349,7 @@ $(document).ready(function () {
     });
   }
 
-  // **********************************************************PROGRESS BAR *************************************************************
+  // ********************************************************** PROGRESS BAR *************************************************************
   var currentStep = 1;
   var updateProgressBar;
 
@@ -374,7 +377,7 @@ $(document).ready(function () {
               heading: "Warning",
               text: "Please Enter Email",
               position: "top-right",
-              bgColor: "#red", // Use valid color
+              bgColor: "#red",
               loader: true,
               hideAfter: 2000,
               stack: false,
@@ -389,7 +392,23 @@ $(document).ready(function () {
               heading: "Warning",
               text: "Please Enter Valid Email",
               position: "top-right",
-              bgColor: "#red", // Use valid color
+              bgColor: "#red",
+              loader: true,
+              hideAfter: 2000,
+              stack: false,
+              showHideTransition: "fade",
+            });
+          } else if (
+            $("#email-check").val().trim() != "" &&
+            !$(".add_email").hasClass("d-none") &&
+            emailSubmitted === false
+          ) {
+            $.toast({
+              icon: "error",
+              heading: "Warning",
+              text: "You entered an email but didn’t submit it!",
+              position: "top-right",
+              bgColor: "#red",
               loader: true,
               hideAfter: 2000,
               stack: false,
@@ -418,6 +437,22 @@ $(document).ready(function () {
               icon: "error",
               heading: "Warning",
               text: "Please Enter Valid Email",
+              position: "top-right",
+              bgColor: "#red",
+              loader: true,
+              hideAfter: 2000,
+              stack: false,
+              showHideTransition: "fade",
+            });
+          } else if (
+            $("#change-email-ip").val() != "" &&
+            !$(".change_email").hasClass("d-none") &&
+            $("#change-email-ip").val().trim() !== oldEmailID
+          ) {
+            $.toast({
+              icon: "error",
+              heading: "Warning",
+              text: "Please submit updated email",
               position: "top-right",
               bgColor: "#red",
               loader: true,
@@ -563,7 +598,8 @@ $(document).ready(function () {
       // ************************************************** QUANTITY *************************************************************************
     });
 
-    totalAmount();
+    calculateFrontendTotal();
+
     $(".btn-increment").click(function () {
       var cartID = $(this).attr("cart_id_data");
       var totalStock = parseInt($(this).attr("data-stock"));
@@ -574,72 +610,60 @@ $(document).ready(function () {
       if (currentQty < totalStock) {
         inputField.stepUp();
         var incQty = parseInt($(`.quantity_${cartID}`).val());
-
-        subTotal(incQty, cartID);
+        updateCartQuantity(incQty, cartID);
       }
     });
 
     $(".btn-decrement").click(function () {
       var cartID = $(this).attr("cart_id_data");
       this.parentNode.querySelector("input[type=number]").stepDown();
-      var decQty = $(`.quantity_${cartID}`).val();
-
-      subTotal(decQty, cartID);
+      var decQty = parseInt($(`.quantity_${cartID}`).val());
+      updateCartQuantity(decQty, cartID);
     });
 
-    function subTotal(qty, cartID) {
-      let original = `.offer_${cartID}`;
-      let prodPrice = $(original).val();
-
-      let p1 = prodPrice.replace(",", "");
-      let price = parseInt(p1);
-
-      let displayPrice = `.disp_${cartID}`;
-
-      let subtotalAmt = qty * price;
-
-      $(displayPrice).text("₹" + subtotalAmt.toLocaleString());
-
-      // update the quantity and subtotal into cart tbl
+    function updateCartQuantity(qty, cartID) {
       $.ajax({
         type: "POST",
         url: base_Url + "update-cart",
         data: {
           quantity: qty,
-          sub_total: subtotalAmt,
           cart_id: cartID,
         },
-        headers: {
-          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-
         dataType: "json",
         success: function (data) {
-          // console.log(data.csrf_token);
-
           if (data.code == 200) {
-            updateCSRF(data.csrf_token);
-            $(".total_amt_cal").text(number_formate(subtotalAmt));
+            $(`.disp_${cartID}`).text("₹" + number_formate(data.sub_total));
+
+            $(".total_amt_cal").text("₹" + number_formate(data.total));
+            $("#final_total").val(data.total);
+          } else {
+            alert("Something went wrong: " + data.status);
           }
         },
         error: function () {
-          console.log("Error");
+          alert("Network error. Please try again.");
         },
       });
-      totalAmount(subtotalAmt);
     }
 
-    function totalAmount() {
+    function number_formate(x) {
+      return parseFloat(x).toLocaleString("en-IN", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    }
+
+    function calculateFrontendTotal() {
       var totalAmt = 0;
       $(".display-price").each(function () {
         let price = $(this).text();
-        let remov_space = price.replace(",", "");
-        let amt = parseFloat(remov_space.replace("₹", "").trim());
-
-        totalAmt += amt;
+        let clean = price.replace(",", "").replace("₹", "").trim();
+        let amt = parseFloat(clean);
+        if (!isNaN(amt)) totalAmt += amt;
       });
-      $("#final_total").val(parseFloat(totalAmt));
-      $(".total_amt_cal").text("₹" + totalAmt.toLocaleString());
+
+      $("#final_total").val(totalAmt.toFixed(2));
+      $(".total_amt_cal").text("₹" + number_formate(totalAmt));
     }
 
     //  ************************************************** CSRF update Token  *****************************************************************
@@ -729,6 +753,7 @@ $(document).ready(function () {
           } else {
             $(".change_email").removeClass("d-none");
             $("#change-email-ip").val(data.email);
+            oldEmailID = data.email.trim();
             $(".add_email").addClass("d-none");
           }
         },
