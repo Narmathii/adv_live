@@ -759,7 +759,7 @@ video {
         color: #d3d3d396 !important;
     }
 
-   
+
 
     .label {
         font-size: .625rem;
@@ -911,7 +911,7 @@ video {
                     alt=""></a>
 
             <div class="wrapper">
-                <form action="<?php echo base_url() ?>search-data" method="get">
+                <form action="<?php echo base_url() ?>search-data" method="get" class="mobile-search">
                     <div class="searchInput">
 
                         <input id="search_bar" type="search" name="search_bar" placeholder="Search"

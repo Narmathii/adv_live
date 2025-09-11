@@ -1,5 +1,8 @@
 /* For Samsung */
 @media only screen and (max-width: 361px) {
+  .mobile-search {
+    display: none !important;
+  }
   address.s1 span {
     background: none;
     margin: 0;
@@ -79,6 +82,10 @@
   #section-hotsale .items_wrapper {
     width: 0;
   } */
+
+  .mobile-search {
+    display: none !important;
+  }
 
   .change-address {
     top: 2px !important;
@@ -167,6 +174,10 @@
 @media only screen and (min-width: 425px) and (max-width: 767px) {
   .change_btn .change-address {
     font-size: 0;
+  }
+
+  form.mobile-search {
+    display: "none" !important;
   }
 
   .change_btn .change-address i {
