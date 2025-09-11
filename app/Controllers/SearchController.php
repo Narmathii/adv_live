@@ -231,6 +231,96 @@ class SearchController extends BaseController
 
     }
 
+    public function searchSuggesstions()
+    {
+        $db = \Config\Database::connect();
+        $searchQuery = $this->request->getGet('query');
+        $searchPattern = "%$searchQuery%";
+
+        // Query the database for search suggestions
+        $query1 = "SELECT 
+        prod_id, brand_id, modal_id, product_name, billing_name, product_price, 
+        offer_price, offer_type, offer_details, arrival_status, stock_status, 
+        redirect_url, product_img,  img_1, img_2, img_3, img_4, img_5, img_6, 
+           img_7, img_8, img_9, img_10, prod_desc, 
+           hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
+           specifications, flag, 1 AS order_col
+    FROM 
+         tbl_products
+         WHERE  `product_name` LIKE ? AND `flag` = 1 
+    UNION ALL
+    SELECT 
+        prod_id, access_id AS brand_id, sub_access_id AS modal_id, product_name, billing_name, product_price, 
+        offer_price, offer_type, offer_details, arrival_status, stock_status, 
+        redirect_url, product_img,  img_1, img_2, img_3, img_4, img_5, img_6, 
+           img_7, img_8, img_9, img_10, prod_desc, 
+           hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
+           specifications, flag, 2 AS order_col
+    FROM 
+        tbl_accessories_list
+        WHERE  `product_name` LIKE ? AND `flag` = 1 
+    UNION ALL
+    SELECT 
+        prod_id, r_menu_id AS brand_id, r_sub_id AS modal_id, product_name, billing_name, product_price, 
+        offer_price, offer_type, offer_details, arrival_status, stock_status, 
+        redirect_url, product_img, img_1, img_2, img_3, img_4, img_5, img_6, 
+           img_7, img_8, img_9, img_10, prod_desc, 
+           hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
+           specifications, flag,3 AS order_col
+    FROM 
+        tbl_rproduct_list
+        WHERE  `product_name` LIKE ? AND `flag` = 1 
+    UNION ALL
+    SELECT 
+        prod_id, h_menu_id AS brand_id, h_submenu_id AS modal_id, product_name, billing_name, product_price, 
+        offer_price, offer_type, offer_details, arrival_status, stock_status, 
+        redirect_url, product_img,  img_1, img_2, img_3, img_4, img_5, img_6, 
+           img_7, img_8, img_9, img_10, prod_desc, 
+           hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
+           specifications, flag, 4 AS order_col
+    FROM 
+         tbl_helmet_products
+         WHERE  `product_name` LIKE ? AND `flag` = 1 
+    UNION ALL
+    SELECT 
+        prod_id, lug_menu_id AS brand_id, lug_submenu_id AS modal_id, product_name, billing_name, product_price, 
+        offer_price, offer_type, offer_details, arrival_status, stock_status, 
+        redirect_url, product_img, img_1, img_2, img_3, img_4, img_5, img_6, 
+           img_7, img_8, img_9, img_10, prod_desc, 
+           hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
+           specifications, flag, 5 AS order_col
+    FROM 
+        tbl_luggagee_products
+        WHERE  `product_name` LIKE ? AND `flag` = 1 
+    UNION ALL
+    SELECT 
+        prod_id, camp_menu_id	 AS brand_id, c_submenu_id AS modal_id, product_name, billing_name, product_price, 
+        offer_price, offer_type, offer_details, arrival_status, stock_status, 
+        redirect_url, product_img, img_1, img_2, img_3, img_4, img_5, img_6, 
+           img_7, img_8, img_9, img_10, prod_desc, 
+           hot_sale, tbl_name, search_brand, weight, weight_units, quantity, 
+           specifications, flag,  6 AS order_col
+    FROM 
+         tbl_camping_products
+         WHERE  `product_name` LIKE ? AND `flag` = 1 
+    ORDER BY 
+        order_col, prod_id LIMIT 5";
+
+        $searchData = $db->query($query1, [
+            $searchPattern,
+            $searchPattern,
+            $searchPattern,
+            $searchPattern,
+            $searchPattern,
+            $searchPattern
+        ])->getResultArray();
+
+
+
+        // Return the suggestions as JSON
+        return $this->response->setJSON($searchData);
+    }
+
     public function loadmoreSearchFilter()
     {
         $db = \Config\Database::connect();
@@ -1248,7 +1338,7 @@ class SearchController extends BaseController
 
 
         $totalDatas = $db->query($query)->getResultArray();
-      
+
 
         // Pagination Settings
         $perPage = 12;

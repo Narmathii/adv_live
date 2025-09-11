@@ -314,6 +314,12 @@
   }
 }
 
+.wrapper {
+  max-width: 55.25rem;
+  margin: 6rem auto;
+  width: 58%;
+}
+
 @media only screen and (min-width: 1200px) and (max-width: 1599px) {
   /* .menu__inner {
     margin-top: -53px !important;
@@ -363,6 +369,10 @@
   .brand img {
     width: auto;
     height: 5.75rem; /* ~92px */
+  }
+
+  .wrapper {
+    width: 46%;
   }
 }
 

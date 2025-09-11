@@ -351,13 +351,13 @@ img {
 }
 
 .header {
-  padding: 32px 5px;
+  padding: 23px 5px;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: auto;
-  z-index: 100;
+  z-index: 101;
   margin: 0 auto;
   background-color: #fff;
   box-shadow: var(--shadow-medium);
@@ -3700,26 +3700,25 @@ h3 {
     padding: 5px;
   }
 
-     .view_all {
-        /* color: #fff !important; */
-        font-size: 12px;
-        font-weight: 700;
-        transition: all 0.4s ease;
-        align-items: center;
-        width: 70px;
-        /* background: #2f2e2e; */
-        /* height: 25px; */
-        justify-content: space-evenly;
-        border-radius: 2px;
-        /* right: 15px; */
-        align-items: center;
-        right: -20px;
-        top: 12px;
-    }
+  .view_all {
+    /* color: #fff !important; */
+    font-size: 12px;
+    font-weight: 700;
+    transition: all 0.4s ease;
+    align-items: center;
+    width: 70px;
+    /* background: #2f2e2e; */
+    /* height: 25px; */
+    justify-content: space-evenly;
+    border-radius: 2px;
+    /* right: 15px; */
+    align-items: center;
+    right: -20px;
+    top: 12px;
+  }
 
-
-  .brands_we_deal >   .view_all {
-    top :18px !important
+  .brands_we_deal > .view_all {
+    top: 18px !important;
   }
   #section-newarrivals h3,
   /*#section-categories h3,*/
@@ -3743,7 +3742,6 @@ h3 {
     display: flex;
     justify-content: space-around;
   } */
-
 
   .fa-angle-left::before {
     color: #fff !important;
@@ -4838,11 +4836,17 @@ a {
   justify-content: center;
 }
 
+header,
+nav,
+.searchInput {
+  overflow: visible !important;
+}
+
 .searchInput .resultBox {
   padding: 0;
-  opacity: 0;
+  /* opacity: 0; */
   pointer-events: none;
-  max-height: 280px;
+  /* max-height: 280px; */
   overflow-y: auto;
 }
 
@@ -4873,7 +4877,7 @@ a {
 
 .resultBox {
   position: absolute;
-  top: 40px;
+  /* top: 40px; */
   background: #fff;
   width: 100%;
   border: 1px solid #d3d3d3;
@@ -5277,7 +5281,7 @@ a {
 }
 @media only screen and (max-width: 1440px) {
   .header-mini {
-    top: 20% !important;
+    top: 17% !important;
   }
 }
 
@@ -6400,14 +6404,13 @@ a.youtube::before{
   }
 }
 
-
 .d-text.address-field {
   background-size: 100%;
   background-repeat: no-repeat;
-  word-wrap: break-word;       
-  overflow-wrap: break-word;   
-  white-space: normal;         
-  max-width: 100%;            
-  font-size: 14px;             
-  line-height: 1.4;           
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  max-width: 100%;
+  font-size: 14px;
+  line-height: 1.4;
 }

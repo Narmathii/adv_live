@@ -1,10 +1,7 @@
-
 .refund_menu {
   margin-top: 2px;
   padding: 3%;
 }
-
-
 
 #amount_type {
   width: 80%;
@@ -33,7 +30,9 @@
   width: 100%;
   height: 100%;
 }
-.addr-text,.name-text ,.email-text{
+.addr-text,
+.name-text,
+.email-text {
   text-transform: uppercase !important;
 }
 

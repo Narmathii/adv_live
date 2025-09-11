@@ -157,6 +157,10 @@ $routes->get('newrrival-view/(:any)', 'Home::newArrivalViewall/$1');
 $routes->get('helmet-view', 'Home::helmetView');
 $routes->get('search-filter', 'Home::searchfiltrView');
 $routes->get('search-data', 'SearchController::searchData');
+$routes->get('get-search-suggestions', 'SearchController::searchSuggesstions');
+
+
+
 $routes->get('privacy-policy', 'Home::policies');
 $routes->get('myorders', 'Home::myorders', ['filter' => 'PaymentAuth']);
 

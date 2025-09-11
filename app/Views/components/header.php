@@ -759,12 +759,7 @@ video {
         color: #d3d3d396 !important;
     }
 
-    .wrapper {
-        width: auto;
-        max-width: 55.25rem;
-        margin: 6rem auto;
-        width: 58%;
-    }
+   
 
     .label {
         font-size: .625rem;
@@ -828,6 +823,85 @@ video {
     .header span {
         color: #fff !important;
     }
+
+    /* searhbar UI  */
+    .searchInput {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 4%;
+    }
+
+    #suggestionsBox {
+        position: absolute;
+        top: 100%;
+        /* directly below input */
+        left: 0;
+        width: 100%;
+        /* match input width */
+        z-index: 9999;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        max-height: 350px;
+        overflow-y: auto;
+        border-radius: 0 0 4px 4px;
+    }
+
+
+
+    body.no-scroll {
+        overflow: hidden;
+    }
+
+    .suggestion {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        color: #333;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .suggestion-img {
+        width: 100px;
+        height: 100px;
+        margin-right: 15px;
+        object-fit: cover;
+    }
+
+    .product-name {
+        flex: 1;
+        word-wrap: break-word;
+        white-space: normal;
+        font-size: 14px;
+    }
+
+    .suggestion:hover {
+        background-color: #f1f1f1;
+    }
+
+
+    .no-suggestions {
+        padding: 10px;
+        text-align: center;
+        color: #888;
+    }
+
+
+    body.no-scroll {
+        overflow: hidden;
+    }
+
+    .search-container {
+        position: relative;
+        display: inline-block;
+        justify-content: center;
+        width: 80%;
+        margin-left: 10%;
+    }
 </style>
 <header class="header clone nav-up" id="header">
     <nav class="navbar container m-0" id="nav-header">
@@ -839,14 +913,19 @@ video {
             <div class="wrapper">
                 <form action="<?php echo base_url() ?>search-data" method="get">
                     <div class="searchInput">
-                        <input id="search_bar" type="text" name="search_bar" placeholder="Search" />
-                        <div class="resultBox"></div>
+
+                        <input id="search_bar" type="search" name="search_bar" placeholder="Search"
+                            onkeyup="fetchSuggestions()" autocomplete="off" />
+
                         <button id="searchQuerySubmit" type="submit" name="searchQuerySubmit">
                             <svg style="width:20px;height:18px" viewBox="0 0 24 24">
                                 <path fill="#000"
                                     d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
                             </svg>
                         </button>
+                    </div>
+                    <div class="search-container">
+                        <div id="suggestionsBox" class="resultBox d-none"></div>
                     </div>
                 </form>
             </div>
@@ -884,8 +963,10 @@ video {
 
         </section>
     </nav>
-
 </header>
+
+
+
 <section class="sm-burger">
 
     <div class="burger" id="burger">
@@ -996,9 +1077,6 @@ video {
                         </div>
                         <?php
                     } ?>
-
-
-
                 </div>
             </li>
             <li class="menu__item menu__dropdown auto_menu" id="menu__item">

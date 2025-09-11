@@ -21,7 +21,7 @@ class App extends BaseConfig
     // public string $baseURL = 'http://localhost/ci4projects/adventure_final';
     // public string $baseURL = 'https://www.adventureshoppe.com/';
 
-    public string $baseURL = 'https://3e765c856362.ngrok-free.app/adv_liv/';
+    public string $baseURL = 'http://localhost/adv_liv/';
 
     // public function __construct()
     // {

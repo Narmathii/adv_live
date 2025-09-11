@@ -200,3 +200,121 @@
 
 
 </script>
+
+<script>
+
+    $(document).ready(function () {
+        $(document).on('click', function (event) {
+            if (
+                !$(event.target).closest('#search_bar').length &&
+                !$(event.target).closest('#suggestionsBox').length
+            ) {
+                $('#suggestionsBox').empty().addClass('d-none');
+            }
+        })
+
+    })
+
+    function fetchSuggestions() {
+        var searchText = $('#search_bar').val().trim();
+
+        if (searchText.length > 0) {
+            $.ajax({
+                url: base_Url + 'get-search-suggestions',
+                type: 'GET',
+                data: { query: searchText },
+                success: function (response) {
+                    displaySuggestions(response);
+                },
+                error: function () {
+                    $('#suggestionsBox').html('Error fetching suggestions');
+                }
+            });
+        } else {
+            $('#suggestionsBox').empty();
+        }
+    }
+
+    function displaySuggestions(suggestions) {
+        var suggestionsBox = $('#suggestionsBox');
+        suggestionsBox.empty();
+
+        if (suggestions.length > 0) {
+            suggestions.forEach(function (suggestion) {
+                const redirectUrl = suggestion.redirect_url
+                    .toLowerCase()
+                    .replace(/\s+/g, '-');
+
+                const encodedId = btoa(suggestion.prod_id);
+
+                let url = "#";
+                switch (suggestion.tbl_name) {
+                    case "tbl_products":
+                        url = `${base_Url}detail/${redirectUrl}/${encodedId}`;
+                        break;
+                    case "tbl_accessories_list":
+                        url = `${base_Url}accessories-detail/${redirectUrl}/${encodedId}`;
+                        break;
+                    case "tbl_rproduct_list":
+                        url = `${base_Url}riding-details/${redirectUrl}/${encodedId}`;
+                        break;
+                    case "tbl_helmet_products":
+                        url = `${base_Url}helmet-details/${redirectUrl}/${encodedId}`;
+                        break;
+                    case "tbl_luggagee_products":
+                        url = `${base_Url}tour-detail/${redirectUrl}/${encodedId}`;
+                        break;
+                    case "tbl_camping_products":
+                        url = `${base_Url}camp-details/${redirectUrl}/${encodedId}`;
+                        break;
+                }
+
+                let searchResHtml = $(`
+                    <a href="${url}" class="suggestion-link">
+                        <div class="suggestion">
+                            <img class="suggestion-img" src="${base_Url + suggestion.product_img}" alt="${suggestion.product_name}" />
+                            <p>${suggestion.product_name}</p>
+                        </div>
+                    </a>
+                `);
+
+                // Attach click event properly
+                searchResHtml.on('click', function () {
+                    $('#search_bar').val(suggestion.product_name);
+                    $('#suggestionsBox').empty();
+                });
+
+                suggestionsBox.removeClass("d-none");
+                suggestionsBox.append(searchResHtml);
+            });
+        } else {
+            suggestionsBox.removeClass('d-none');
+            suggestionsBox.html('<div class="no-suggestions">No suggestions found</div>');
+        }
+    }
+</script>
+
+
+
+<!-- To scroll search suggestions -->
+<script>
+    const suggestionsBox = document.getElementById("suggestionsBox");
+
+    suggestionsBox.addEventListener("wheel", function (e) {
+        const scrollTop = this.scrollTop;
+        const scrollHeight = this.scrollHeight;
+        const height = this.clientHeight;
+        const delta = e.deltaY;
+
+        // Prevent page scroll when suggestions box can still scroll
+        if (
+            (delta > 0 && scrollTop + height < scrollHeight) ||
+            (delta < 0 && scrollTop > 0)
+        ) {
+            e.preventDefault();
+            this.scrollTop += delta;
+        }
+    });
+
+
+</script>
