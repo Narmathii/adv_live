@@ -616,7 +616,6 @@ class CartController extends BaseController
             return json_encode([
                 'code' => 404,
                 'status' => 'Cart item not found',
-                'csrf_token' => csrf_hash()
             ]);
         }
 

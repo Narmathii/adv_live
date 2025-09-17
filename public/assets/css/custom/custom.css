@@ -5094,12 +5094,16 @@ nav,
   .options {
     display: block !important;
   }
+  .suggestion {
+    width: 0 !important;
+  }
+
   .window {
     display: block;
   }
-  .resultBox {
+  /* .resultBox {
     display: none;
-  }
+  } */
   .wishlist_section .row {
     padding-right: 0 !important;
     padding-left: 0 !important;

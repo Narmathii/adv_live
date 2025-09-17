@@ -48,7 +48,6 @@ require("components/head.php");
 
     /* Responsive Styling */
     @media (max-width: 768px) {
-
         /* Reduce padding and font size for smaller screens */
         .pagination-link,
         .pagination-link-default {
@@ -82,7 +81,7 @@ require("components/head.php");
 
         <!-- section begin -->
         <section id="subheader" class="jarallax text-light">
-            <!-- <img src="<?php echo base_url() ?>public/assets/images/background/2.jpg" class="jarallax-img" alt=""> -->
+            <img src="<?php echo base_url() ?>public/assets/images/background/tvs.jpg" class="jarallax-img" alt="">
             <div class="center-y relative text-center">
                 <div class="container">
                     <div class="row">
@@ -441,7 +440,7 @@ require("components/head.php");
         ?>
         <script>
             function productDetailsPage(page, search_data) {
-                
+
                 $.ajax({
                     method: 'POST',
                     url: base_Url + 'loadmore-searchdata',
@@ -464,7 +463,7 @@ require("components/head.php");
                             $('.seach_results').html(searchResults);
                             $('#pagination-container-default').addClass('d-none');
                         } else {
-                           
+
                             // INR formatter
                             const formatter = new Intl.NumberFormat('en-US', {
                                 style: 'currency',
@@ -563,7 +562,7 @@ require("components/head.php");
                                         </form>
                                     </div>`;
                             }
-                            searchResults +='<div class="pagination-container-default " id="pagination-container-default" style="background-size: 100%; background-repeat: no-repeat;"></div>'
+                            searchResults += '<div class="pagination-container-default " id="pagination-container-default" style="background-size: 100%; background-repeat: no-repeat;"></div>'
                             $('.seach_results').html(searchResults);
 
 
@@ -577,7 +576,7 @@ require("components/head.php");
                             else {
                                 $('#pagination-link-default').html("");
                             }
-                            
+
 
                             // Add to wishlist event handler
                             $(".wishlist-icon").on('click', function () {
@@ -648,7 +647,7 @@ require("components/head.php");
                         </li>`;
                 });
                 paginationUI += '</ul>';
-                
+
                 $('#pagination-container-default').removeClass("d-none");
                 $('#pagination-container-default').html(paginationUI);
 

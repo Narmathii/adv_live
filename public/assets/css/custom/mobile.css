@@ -1,8 +1,8 @@
 /* For Samsung */
 @media only screen and (max-width: 361px) {
-  .mobile-search {
+  /* .mobile-search {
     display: none !important;
-  }
+  } */
   address.s1 span {
     background: none;
     margin: 0;
@@ -24,6 +24,17 @@
     width: 80px !important;
     margin-right: 12px;
     margin-bottom: 10px;
+  }
+  .searchInput {
+    margin-top: 14% !important;
+  }
+
+  .search-container {
+    position: relative;
+    display: inline-block;
+    justify-content: center;
+    width: 100%;
+    margin-left: -37%;
   }
 
   /* .products_wrapper > .offer {
@@ -83,8 +94,20 @@
     width: 0;
   } */
 
-  .mobile-search {
-    display: none !important;
+  #suggestionsBox {
+    width: 200% !important;
+  }
+
+  .search-container {
+    width: 100% !important;
+    margin-left: -37% !important;
+  }
+
+  .suggestion-img {
+    width: 100px !important;
+  }
+  img .searchInput {
+    margin-top: 14% !important;
   }
 
   .change-address {
@@ -143,6 +166,21 @@
   } */
 }
 @media only screen and (max-width: 768px) {
+  .searchInput {
+    margin-top: 14% !important;
+  }
+  #suggestionsBox {
+    width: 200% !important;
+  }
+
+  .suggestion-img {
+    width: 100px !important;
+  }
+
+  .search-container {
+    width: 100% !important;
+    margin-left: -37% !important;
+  }
   .add-address {
     right: 17px;
     top: 52px;
@@ -176,6 +214,19 @@
     font-size: 0;
   }
 
+  #suggestionsBox {
+    width: 200% !important;
+  }
+  .suggestion-img {
+    width: 100px !important;
+    max-width: 0 !important;
+  }
+
+  .search-container {
+    width: 100% !important;
+    margin-left: -37% !important;
+  }
+
   form.mobile-search {
     display: "none" !important;
   }
@@ -183,6 +234,17 @@
   .change_btn .change-address i {
     font-size: 16px;
     margin-left: 0;
+  }
+  .suggestion-img {
+    width: 100px;
+    height: 0 !important;
+    margin-right: -102px;
+    object-fit: cover;
+  }
+
+  form.mobile-search > a {
+    display: none !important;
+    justify-content: none !important;
   }
 
   .change-address {

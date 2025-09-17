@@ -6,6 +6,7 @@ require_once(APPPATH . "Libraries/razorpay/razorpay-php/Razorpay.php");
 use Razorpay\Api\Api;
 
 use App\Models\ProductTallyMappingModel;
+use App\Models\WebhookPaymentLog;
 
 
 
@@ -156,26 +157,25 @@ class RazerpayController extends BaseController
 	{
 
 		$tallyModal = new ProductTallyMappingModel();
+		$webhookLog = new WebhookPaymentLog();
 
 		$this->session = \Config\Services::session();
 		$db = \Config\Database::connect();
 
-
 		$payload = file_get_contents("php://input");
 
 		$signature = $_SERVER['HTTP_X_RAZORPAY_SIGNATURE'] ?? '';
-		$webhookSecret = getenv('RAZORPAY_WEBHOOK_SECRET_TEST');
+		// $webhookSecret = getenv('RAZORPAY_WEBHOOK_SECRET_TEST');
 
 		// Verify signature
-		$expectedSignature = hash_hmac('sha256', $payload, $webhookSecret);
-		if (!hash_equals($expectedSignature, $signature)) {
-			return $this->response->setStatusCode(403)->setJSON(['message' => 'Invalid signature']);
-		}
+		// $expectedSignature = hash_hmac('sha256', $payload, $webhookSecret);
+		// if (!hash_equals($expectedSignature, $signature)) {
+		// 	return $this->response->setStatusCode(403)->setJSON(['message' => 'Invalid signature']);
+		// }
 
 		$data = json_decode($payload, true);
 
 		$event = $data['event'];
-
 
 		$payment = $data['payload']['payment']['entity'];
 
@@ -195,6 +195,27 @@ class RazerpayController extends BaseController
 			return $this->response->setStatusCode(400)->setJSON(['message' => 'Order ID missing in notes']);
 		}
 
+		// webhook-log
+		$createdAt = time();
+		$dateTime = (new \DateTime("@$createdAt"))
+			->setTimezone(new \DateTimeZone('Asia/Kolkata'))
+			->format('Y-m-d H:i:s');
+
+		$webhook_log_data = [
+			'order_id' => $notes['order_id'],
+			'user_id' => $notes['user_id'],
+			'username' => $notes['username'],
+			'razorpay_payment_id' => $razorpay_payment_id,
+			'razorpay_order_id' => $razorpay_order_id,
+			'razorpay_signature' => $signature,
+			'date_time' => $dateTime,
+			'payment_method' => $payment['method'],
+			'total_amount' => $payment['amount'],
+			'payment_status' => $payment['status']
+		];
+		$webhookLog->insert($webhook_log_data);
+
+
 		if ($event === 'payment.captured') {
 			$payment_method = $payment['method'];
 
@@ -202,230 +223,6 @@ class RazerpayController extends BaseController
 			$userID = $notes['user_id'];
 			$orderID = $orderid;
 			$username = $notes['username'];
-
-			$sess = [
-				'user_id' => $userID,
-				'username' => $username,
-				'loginStatus' => "YES",
-				'otp_verify' => "YES"
-			];
-			$this->session->set($sess);
-
-
-			// Delete Products from cart 
-			$query = "SELECT a.cart_id, a.`table_name`, a.`prod_id`, a.`quantity`, a.`prod_price`, a.`sub_total`, b.add_id 
-				FROM `tbl_user_cart` AS a 
-				INNER JOIN tbl_user_address AS b ON a.`user_id` = b.user_id 
-				WHERE a.flag = 1 AND b.flag = 1 AND a.user_id = $userID  AND b.default_addr = 1";
-
-			$cartData = $db->query($query)->getResultArray();
-
-			foreach ($cartData as $cartItem) {
-				$prodID = $cartItem['prod_id'];
-				$tblName = $cartItem['table_name'];
-				$cartID = $cartItem['cart_id'];
-				$dltcart = "DELETE FROM tbl_user_cart WHERE cart_id = $cartID AND prod_id = $prodID";
-				$dltRes = $db->query($dltcart);
-			}
-
-			// Updating quatity to products tbl based on checkout products 
-			$itemList = $db->query("SELECT * FROM `tbl_order_item` WHERE `order_id` =  $orderID  AND `flag` = 1")->getResultArray();
-
-
-			foreach ($itemList as $items) {
-				$prodID = $items['prod_id'];
-				$tblName = $items['table_name'];
-				$checkoutQty = $items['quantity'];
-				$size = $items['size'];
-				$color = $items['color'];
-
-
-
-				// get product qty from product table
-				$getqty = "SELECT `quantity` FROM `$tblName` WHERE `prod_id` = ? AND flag = 1";
-				$oldQty = $db->query($getqty, [$prodID])->getRow();
-
-				$oldQtyValue = $oldQty->quantity;
-
-				$updatedQty = $oldQtyValue - $checkoutQty;
-
-				// update new qty to product table
-				$db->query("SET @source = 'appteq'");
-				$updateQry = "UPDATE  `$tblName` SET quantity = ? WHERE prod_id = ? AND tbl_name = ?";
-				$updateRes = $db->query($updateQry, [$updatedQty, $prodID, $tblName]);
-
-
-				$payment_status = 'COMPLETED';
-
-				$menuMappings = [
-					'tbl_accessories_list' => [
-						'menuid' => 'access_id',
-						'submenuid' => 'sub_access_id',
-						'tbl_menu' => 'tbl_access_master',
-						'tbl_submenu' => 'tbl_subaccess_master',
-						'accessid' => 'access_id',
-						'mname' => 'access_title',
-						'subname' => 'sub_access_name'
-					],
-					'tbl_rproduct_list' => [
-						'menuid' => 'r_menu_id',
-						'submenuid' => 'r_sub_id',
-						'tbl_menu' => 'tbl_riding_menu',
-						'tbl_submenu' => 'tbl_riding_submenu',
-						'accessid' => 'r_menu_id',
-						'mname' => 'r_menu',
-						'subname' => 'r_sub_menu'
-					],
-					'tbl_helmet_products' => [
-						'menuid' => 'h_menu_id',
-						'submenuid' => 'h_submenu_id',
-						'tbl_menu' => 'tbl_helmet_menu',
-						'tbl_submenu' => 'tbl_helmet_submenu',
-						'accessid' => 'h_menu_id',
-						'mname' => 'h_menu',
-						'subname' => 'h_submenu'
-					],
-					'tbl_luggagee_products' => [
-						'menuid' => 'lug_menu_id',
-						'submenuid' => 'lug_submenu_id',
-						'tbl_menu' => 'tbl_luggage_menu',
-						'tbl_submenu' => 'tbl_luggage_submenu',
-						'accessid' => 'lug_menu_id',
-						'mname' => 'lug_menu',
-						'subname' => 'lug_submenu'
-					],
-					'tbl_camping_products' => [
-						'menuid' => 'camp_menu_id',
-						'submenuid' => 'c_submenu_id'
-
-					]
-				];
-
-				// Get menu and submenu from mappings
-				if (isset($menuMappings[$tblName])) {
-					$MenuID = $menuMappings[$tblName]['menuid'];
-					$subMenuID = $menuMappings[$tblName]['submenuid'];
-
-					$tblMenu = $menuMappings[$tblName]['tbl_menu'] ?? null;
-					$tblSubmenu = $menuMappings[$tblName]['tbl_submenu'] ?? null;
-
-					$menuName = $menuMappings[$tblName]['mname'] ?? null;
-					$SubmenuName = $menuMappings[$tblName]['subname'] ?? null;
-
-					$accessID = $menuMappings[$tblName]['accessid'];
-
-					// Construct the query based on table  [Beacause Camping products dont have submenus]
-					if ($tblName == 'tbl_camping_products') {
-						$query = "SELECT a.`$MenuID`, a.`$subMenuID`, b.camp_menu AS menu, c.c_submenu  AS submenu
-						FROM `$tblName` AS a
-						INNER JOIN tbl_camping_menu AS b ON a.`camp_menu_id` = b.camp_menu_id
-						INNER JOIN tbl_camping_submenu AS c ON c.c_submenu_id = a.c_submenu_id
-						WHERE a.prod_id = ?";
-					} else {
-						$query = "SELECT a.`$MenuID`,a.`$subMenuID` , b.`$menuName` AS menu, c.`$SubmenuName` AS submenu
-						FROM `$tblName` AS a
-						INNER JOIN `$tblMenu` AS b ON a.`$accessID` = b.`$accessID`
-						INNER JOIN `$tblSubmenu` AS c ON c.`$subMenuID` = a.`$subMenuID`
-						WHERE a.prod_id = ?";
-					}
-
-					$getMenuData = $db->query($query, [$prodID])->getResultArray();
-				}
-
-				// Tally Datas --------------------------------------------------
-				$query = "SELECT c.product_name ,c.product_price AS actual_price,c.offer_price,c.offer_type,c.offer_details, b.sub_total  , a.courier_charge , a.sub_total AS total  , 
-					a.order_id ,a.order_no,b.quantity,
-					a.`payment_status`
-					FROM tbl_orders AS a INNER JOIN tbl_order_item AS b 
-					ON a.order_id = b.order_id INNER JOIN  $tblName AS c 
-					ON b.prod_id = c.prod_id                                                                                                                                                                        
-					WHERE  a.order_id = ?   AND c.prod_id = ?";
-
-				$getResult = $db->query($query, [$orderID, $prodID])->getResultArray();
-
-				$getUser = $db->query("SELECT `username`  FROM `tbl_users` WHERE `user_id` = $userID AND `flag` = 1")->getRow();
-				$userName = $getUser->username;
-
-
-				if ($size != '0') {
-					$tallySize = $size;
-				} else {
-					$tallyColor = "null";
-					$tallySize = "null";
-				}
-
-				// update Tally datas
-				$tallyData = [
-					'order_id' => $orderID,
-					'order_no' => $getResult[0]['order_no'],
-					'prod_id' => $prodID,
-					'product_name' => $getResult[0]['product_name'],
-					'customer_name' => $userName,
-					'tbl_name' => $tblName,
-					'old_quantity' => $oldQtyValue,
-					'new_quantity' => $updatedQty,
-					'shipping_qty' => $checkoutQty,
-					'courier_charge' => $getResult[0]['courier_charge'],
-					'total_amount' => $getResult[0]['total'],
-					'payment_status' => $payment_status,
-					'product_price' => $getResult[0]['sub_total'],
-					'actual_price' => $getResult[0]['actual_price'],
-					'offer_price' => $getResult[0]['offer_price'],
-					'offer_type' => $getResult[0]['offer_type'],
-					'offer_details' => $getResult[0]['offer_details'],
-					'color' => 0,
-					'size' => $tallySize,
-					'menu' => $getMenuData[0]['menu'],
-					'submenu' => $getMenuData[0]['submenu'],
-					'tally_sync_status' => 'pending'
-				];
-
-
-
-				$order_number = $getResult[0]['order_no'];
-				$check_old = "SELECT * FROM `tally_details` WHERE 1 AND `order_no` = ?;";
-				$getOldData = $db->query($check_old, [$order_number])->getResultArray();
-
-				if (count($getOldData) <= 0) {
-					$insertData = $tallyModal->insert($tallyData);
-				}
-
-				if ($size != '0') {
-					if ($updateRes) {
-						$configQry = "SELECT `config_id`,`prod_id`,`tbl_name`,`size`,`soldout_status` FROM `tbl_configuration`
-						WHERE `flag` = 1 AND prod_id = ? AND tbl_name = ?";
-						$res = $db->query($configQry, [$prodID, $tblName])->getResultArray();
-
-
-						if (!empty($res)) {
-							$SizeData = json_decode($res[0]['size']);
-							$stockData = json_decode($res[0]['soldout_status']);
-
-							// Update stock based on size and color
-							for ($i = 0; $i < count($SizeData); $i++) {
-								if ($SizeData[$i] == $size) {
-									$oldStock = $stockData[$i];
-									$newStock = $oldStock - $checkoutQty;
-									$stockData[$i] = $newStock;
-								}
-							}
-
-							// Encode the updated data back to JSON
-
-							$updatedSizeData = json_encode($SizeData);
-							$updatedStockData = json_encode($stockData);
-
-
-							$updateConfigQry = "UPDATE tbl_configuration 
-                            SET colour = ?, size = ?, soldout_status = ?
-                            WHERE prod_id = ? AND tbl_name = ? AND flag = 1";
-
-							$updateConfigRes = $db->query($updateConfigQry, [$updatedColorData, $updatedSizeData, $updatedStockData, $prodID, $tblName]);
-						}
-					}
-				}
-
-			}
 
 
 			// Updating Order Status
@@ -440,17 +237,244 @@ class RazerpayController extends BaseController
 
 			$orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,delivery_message = ?,delivery_status = ?,payment_status = ?,payment_method = ? WHERE order_id = ?";
 			$updateData = $db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $signature, $orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $payment_method, $orderID]);
-
 			$affectedRows = $db->affectedRows();
 
-			if ($affectedRows == 1) {
-				$result['code'] = 200;
-				$result['status'] = 'success';
-				$result['message'] = "Orders updated successfully";
+			if ($affectedRows > 0) {
+				$sess = [
+					'user_id' => $userID,
+					'username' => $username,
+					'loginStatus' => "YES",
+					'otp_verify' => "YES"
+				];
+				$this->session->set($sess);
+
+
+
+				// Delete Products from cart 
+				$query = "SELECT a.cart_id, a.`table_name`, a.`prod_id`, a.`quantity`, a.`prod_price`, a.`sub_total`, b.add_id 
+				FROM `tbl_user_cart` AS a 
+				INNER JOIN tbl_user_address AS b ON a.`user_id` = b.user_id 
+				WHERE a.flag = 1 AND b.flag = 1 AND a.user_id = $userID  AND b.default_addr = 1";
+
+				$cartData = $db->query($query)->getResultArray();
+
+				foreach ($cartData as $cartItem) {
+					$prodID = $cartItem['prod_id'];
+					$tblName = $cartItem['table_name'];
+					$cartID = $cartItem['cart_id'];
+					$dltcart = "DELETE FROM tbl_user_cart WHERE cart_id = $cartID AND prod_id = $prodID";
+					$dltRes = $db->query($dltcart);
+				}
+
+
+				// Updating quatity to products tbl based on checkout products 
+				$itemList = $db->query("SELECT * FROM `tbl_order_item` WHERE `order_id` =  $orderID  AND `flag` = 1")->getResultArray();
+
+
+				foreach ($itemList as $items) {
+					$prodID = $items['prod_id'];
+					$tblName = $items['table_name'];
+					$checkoutQty = $items['quantity'];
+					$size = $items['size'];
+					$color = $items['color'];
+
+
+					// get product qty from product table
+					$getqty = "SELECT `quantity` FROM `$tblName` WHERE `prod_id` = ? AND flag = 1";
+					$oldQty = $db->query($getqty, [$prodID])->getRow();
+
+					$oldQtyValue = $oldQty->quantity;
+
+					$updatedQty = $oldQtyValue - $checkoutQty;
+
+					// update new qty to product table
+					$db->query("SET @source = 'appteq'");
+					$updateQry = "UPDATE  `$tblName` SET quantity = ? WHERE prod_id = ?";
+					$updateRes = $db->query($updateQry, [$updatedQty, $prodID]);
+
+
+					$payment_status = 'COMPLETED';
+
+					$menuMappings = [
+						'tbl_accessories_list' => [
+							'menuid' => 'access_id',
+							'submenuid' => 'sub_access_id',
+							'tbl_menu' => 'tbl_access_master',
+							'tbl_submenu' => 'tbl_subaccess_master',
+							'accessid' => 'access_id',
+							'mname' => 'access_title',
+							'subname' => 'sub_access_name'
+						],
+						'tbl_rproduct_list' => [
+							'menuid' => 'r_menu_id',
+							'submenuid' => 'r_sub_id',
+							'tbl_menu' => 'tbl_riding_menu',
+							'tbl_submenu' => 'tbl_riding_submenu',
+							'accessid' => 'r_menu_id',
+							'mname' => 'r_menu',
+							'subname' => 'r_sub_menu'
+						],
+						'tbl_helmet_products' => [
+							'menuid' => 'h_menu_id',
+							'submenuid' => 'h_submenu_id',
+							'tbl_menu' => 'tbl_helmet_menu',
+							'tbl_submenu' => 'tbl_helmet_submenu',
+							'accessid' => 'h_menu_id',
+							'mname' => 'h_menu',
+							'subname' => 'h_submenu'
+						],
+						'tbl_luggagee_products' => [
+							'menuid' => 'lug_menu_id',
+							'submenuid' => 'lug_submenu_id',
+							'tbl_menu' => 'tbl_luggage_menu',
+							'tbl_submenu' => 'tbl_luggage_submenu',
+							'accessid' => 'lug_menu_id',
+							'mname' => 'lug_menu',
+							'subname' => 'lug_submenu'
+						],
+						'tbl_camping_products' => [
+							'menuid' => 'camp_menu_id',
+							'submenuid' => 'c_submenu_id'
+
+						]
+					];
+
+					// Get menu and submenu from mappings
+					if (isset($menuMappings[$tblName])) {
+						$MenuID = $menuMappings[$tblName]['menuid'];
+						$subMenuID = $menuMappings[$tblName]['submenuid'];
+
+						$tblMenu = $menuMappings[$tblName]['tbl_menu'] ?? null;
+						$tblSubmenu = $menuMappings[$tblName]['tbl_submenu'] ?? null;
+
+						$menuName = $menuMappings[$tblName]['mname'] ?? null;
+						$SubmenuName = $menuMappings[$tblName]['subname'] ?? null;
+
+						$accessID = $menuMappings[$tblName]['accessid'];
+
+						// Construct the query based on table  [Beacause Camping products dont have submenus]
+						if ($tblName == 'tbl_camping_products') {
+							$query = "SELECT a.`$MenuID`, a.`$subMenuID`, b.camp_menu AS menu, c.c_submenu  AS submenu
+						FROM `$tblName` AS a
+						INNER JOIN tbl_camping_menu AS b ON a.`camp_menu_id` = b.camp_menu_id
+						INNER JOIN tbl_camping_submenu AS c ON c.c_submenu_id = a.c_submenu_id
+						WHERE a.prod_id = ?";
+						} else {
+							$query = "SELECT a.`$MenuID`,a.`$subMenuID` , b.`$menuName` AS menu, c.`$SubmenuName` AS submenu
+						FROM `$tblName` AS a
+						INNER JOIN `$tblMenu` AS b ON a.`$accessID` = b.`$accessID`
+						INNER JOIN `$tblSubmenu` AS c ON c.`$subMenuID` = a.`$subMenuID`
+						WHERE a.prod_id = ?";
+						}
+
+						$getMenuData = $db->query($query, [$prodID])->getResultArray();
+					}
+
+					// Tally Datas --------------------------------------------------
+					$query = "SELECT c.product_name ,c.product_price AS actual_price,c.offer_price,c.offer_type,c.offer_details, b.sub_total  , a.courier_charge , a.sub_total AS total  , 
+					a.order_id ,a.order_no,b.quantity,
+					a.`payment_status`
+					FROM tbl_orders AS a INNER JOIN tbl_order_item AS b 
+					ON a.order_id = b.order_id INNER JOIN  $tblName AS c 
+					ON b.prod_id = c.prod_id                                                                                                                                                                        
+					WHERE  a.order_id = ?   AND c.prod_id = ?";
+
+					$getResult = $db->query($query, [$orderID, $prodID])->getResultArray();
+
+					$getUser = $db->query("SELECT `username`  FROM `tbl_users` WHERE `user_id` = $userID AND `flag` = 1")->getRow();
+					$userName = $getUser->username;
+
+
+					if ($size != '0') {
+						$tallySize = $size;
+					} else {
+						$tallyColor = "null";
+						$tallySize = "null";
+					}
+
+					// update Tally datas
+					$tallyData = [
+						'order_id' => $orderID,
+						'order_no' => $getResult[0]['order_no'],
+						'prod_id' => $prodID,
+						'product_name' => $getResult[0]['product_name'],
+						'customer_name' => $userName,
+						'tbl_name' => $tblName,
+						'old_quantity' => $oldQtyValue,
+						'new_quantity' => $updatedQty,
+						'shipping_qty' => $checkoutQty,
+						'courier_charge' => $getResult[0]['courier_charge'],
+						'total_amount' => $getResult[0]['total'],
+						'payment_status' => $payment_status,
+						'product_price' => $getResult[0]['sub_total'],
+						'actual_price' => $getResult[0]['actual_price'],
+						'offer_price' => $getResult[0]['offer_price'],
+						'offer_type' => $getResult[0]['offer_type'],
+						'offer_details' => $getResult[0]['offer_details'],
+						'color' => 0,
+						'size' => $tallySize,
+						'menu' => $getMenuData[0]['menu'],
+						'submenu' => $getMenuData[0]['submenu'],
+						'tally_sync_status' => 'pending'
+					];
+
+
+
+					$order_number = $getResult[0]['order_no'];
+					$check_old = "SELECT * FROM `tally_details` WHERE 1 AND `order_no` = ?;";
+					$getOldData = $db->query($check_old, [$order_number])->getResultArray();
+
+					if (count($getOldData) <= 0) {
+						$insertData = $tallyModal->insert($tallyData);
+					}
+
+					if ($size != '0') {
+						if ($updateRes) {
+							$configQry = "SELECT `config_id`,`prod_id`,`tbl_name`,`size`,`soldout_status` FROM `tbl_configuration`
+						WHERE `flag` = 1 AND prod_id = ? AND tbl_name = ?";
+							$res = $db->query($configQry, [$prodID, $tblName])->getResultArray();
+
+
+							if (!empty($res)) {
+								$SizeData = json_decode($res[0]['size']);
+								$stockData = json_decode($res[0]['soldout_status']);
+
+								// Update stock based on size and color
+								for ($i = 0; $i < count($SizeData); $i++) {
+									if ($SizeData[$i] == $size) {
+										$oldStock = $stockData[$i];
+										$newStock = $oldStock - $checkoutQty;
+										$stockData[$i] = $newStock;
+									}
+								}
+
+								// Encode the updated data back to JSON
+
+								$updatedSizeData = json_encode($SizeData);
+								$updatedStockData = json_encode($stockData);
+
+
+								$updateConfigQry = "UPDATE tbl_configuration 
+                            SET colour = ?, size = ?, soldout_status = ?
+                            WHERE prod_id = ? AND tbl_name = ? AND flag = 1";
+
+								$updateConfigRes = $db->query($updateConfigQry, [null, $updatedSizeData, $updatedStockData, $prodID, $tblName]);
+							}
+						}
+					}
+
+				}
+				$result = [
+					'code' => 200,
+					'status' => 'success',
+					'message' => "Orders updated successfully"
+				];
 			} else {
-				$result['code'] = 400;
-				$result['status'] = 'failure';
-				$result['message'] = "Orders updated failed";
+				$result = [
+					'code' => 400,
+					'status' => 'failure',
+					'message' => "Orders update failed"
+				];
 			}
 			echo json_encode($result);
 

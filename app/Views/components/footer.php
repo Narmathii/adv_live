@@ -207,21 +207,20 @@
 
     $(document).ready(function () {
 
-        function toggleMobileSearch() {
-            let windowWidth = window.innerWidth;
+        // function toggleMobileSearch() {
+        //     let windowWidth = window.innerWidth;
 
-            if (windowWidth <= 767) {
-                $(".mobile-search").addClass("d-none");
-            } else {
-                $(".mobile-search").removeClass("d-none");
-            }
-        }
-        toggleMobileSearch();
+        //     if (windowWidth <= 767) {
+        //         $(".mobile-search").addClass("d-none");
+        //     } else {
+        //         $(".mobile-search").removeClass("d-none");
+        //     }
+        // }
+        // toggleMobileSearch();
 
-        $(window).on("resize", function () {
-            toggleMobileSearch();
-        });
-
+        // $(window).on("resize", function () {
+        //     toggleMobileSearch();
+        // });
 
         $(document).on('click', function (event) {
             if (
