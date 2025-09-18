@@ -570,7 +570,7 @@ class LoginControllerr extends BaseController
 
       $callbackURL = session()->get('callback_url');
 
-  
+
       if ($callbackURL) {
         $session->remove('callback_url');
         $res['c_url'] = $callbackURL;
@@ -1030,7 +1030,15 @@ class LoginControllerr extends BaseController
 
     $this->session = \Config\Services::session();
     $session = session();
-    $session->destroy();
+    $session->remove([
+      'name',
+      'username',
+      'user_id',
+      'loginStatus',
+      'otp_verify',
+      'jwt'
+    ]);
+
     return redirect()->to('/');
   }
 

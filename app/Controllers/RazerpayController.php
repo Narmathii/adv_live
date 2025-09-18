@@ -251,37 +251,37 @@ class RazerpayController extends BaseController
 			return $this->response->setStatusCode(400)->setJSON(['message' => 'Order ID missing in notes']);
 		}
 
-		// webhook-log
-		$createdAt = time();
-		$dateTime = (new \DateTime("@$createdAt"))
-			->setTimezone(new \DateTimeZone('Asia/Kolkata'))
-			->format('Y-m-d H:i:s');
+		if ($event === 'payment.captured') {
+			// webhook-log
+			$createdAt = time();
+			$dateTime = (new \DateTime("@$createdAt"))
+				->setTimezone(new \DateTimeZone('Asia/Kolkata'))
+				->format('Y-m-d H:i:s');
 
-		$webhook_log_data = [
-			'order_id' => $notes['order_id'],
-			'user_id' => $notes['user_id'],
-			'username' => $notes['username'],
-			'razorpay_payment_id' => $razorpay_payment_id,
-			'razorpay_order_id' => $razorpay_order_id,
-			'razorpay_signature' => $signature,
-			'date_time' => $dateTime,
-			'payment_method' => $payment['method'],
-			'total_amount' => $payment['amount'],
-			'payment_status' => $payment['status']
-		];
-		$webhookLog->insert($webhook_log_data);
+			$webhook_log_data = [
+				'order_id' => $notes['order_id'],
+				'user_id' => $notes['user_id'],
+				'username' => $notes['username'],
+				'razorpay_payment_id' => $razorpay_payment_id,
+				'razorpay_order_id' => $razorpay_order_id,
+				'razorpay_signature' => $signature,
+				'date_time' => $dateTime,
+				'payment_method' => $payment['method'],
+				'total_amount' => $payment['amount'],
+				'payment_status' => $payment['status']
+			];
+			$webhookLog->insert($webhook_log_data);
 
-		$insertID = $webhookLog->getInsertID();
-		if ($insertID) {
-			log_message('debug', 'Webhook log inserted with ID: ' . $insertID);
-		} else {
-			log_message('error', 'Webhook insert failed: ' . json_encode($webhookLog->errors()));
-		}
+			$insertID = $webhookLog->getInsertID();
+			if ($insertID) {
+				log_message('debug', 'Webhook log inserted with ID: ' . $insertID);
+			} else {
+				log_message('error', 'Webhook insert failed: ' . json_encode($webhookLog->errors()));
+			}
 
-		if ($event === 'payment.captured' || $event === 'order.paid') {
+		} else if ($event === 'order.paid') {
 			$payment_method = $payment['method'];
 
-			// User Details from Notes:
 			$userID = $notes['user_id'];
 			$orderID = $orderid;
 			$username = $notes['username'];

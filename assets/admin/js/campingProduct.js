@@ -46,7 +46,21 @@ $(document).ready(function () {
   $("#addData").click(function () {
     mode = "new";
 
-    $("#model-data").val("");
+    $("#parent-config").empty();
+    $("#product-main")[0].reset();
+    prodDesc.setData("");
+    specificationss.setData("");
+
+    // Reset main product image
+    $("#product_img").val("");
+    $("#product_image_url").attr("src", "").hide();
+    for (let i = 1; i <= 10; i++) {
+      $("#img_" + i).val("");
+      $("#img" + i + "_url")
+        .attr("src", "")
+        .hide();
+    }
+
     $("#model-data").modal("show");
   });
 
