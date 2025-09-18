@@ -6,6 +6,7 @@ require_once(APPPATH . "Libraries/razorpay/razorpay-php/Razorpay.php");
 use Razorpay\Api\Api;
 
 use App\Models\ProductTallyMappingModel;
+use App\Models\PaymentRequestLog;
 use App\Models\WebhookPaymentLog;
 
 
@@ -21,6 +22,7 @@ class RazerpayController extends BaseController
 	public function payment()
 	{
 		$db = \Config\Database::connect();
+		$paymentRequestLogModel = new PaymentRequestLog;
 		//$this->data['db'] = $db;
 		$orderID = session()->get('order_id');
 
@@ -43,7 +45,7 @@ class RazerpayController extends BaseController
 		if ($oldOrder != '') {
 			return redirect()->to('myorders');
 		}
-		// Check the orderID is already has rzporderID
+		// Check the orderID is already has rzp orderID
 
 
 		$previousURL = previous_url();
@@ -84,10 +86,56 @@ class RazerpayController extends BaseController
 			'number' => $userData->number,
 			'user_id' => $userID,
 			'order_id' => $orderID,
-
 		];
 
 
+		// Payment request Log
+		$createdAt = time();
+		$dateTime = (new \DateTime("@$createdAt"))
+			->setTimezone(new \DateTimeZone('Asia/Kolkata'))
+			->format('Y-m-d H:i:s');
+
+		$getOrderItem = $db->query("SELECT * FROM `tbl_order_item` WHERE `order_id` = ? AND `flag` = 1", [$orderID])->getResultArray();
+
+
+
+		for ($i = 0; $i <= count($getOrderItem); $i++) {
+			$prodID = $getOrderItem[$i]['prod_id'];
+			$table_name = $getOrderItem[$i]['table_name'];
+			$quantity = $getOrderItem[$i]['quantity'];
+			$prod_price = $getOrderItem[$i]['prod_price'];
+			$sub_total = $getOrderItem[$i]['sub_total'];
+			$size = $getOrderItem[$i]['size'];
+			$mrp = $getOrderItem[$i]['mrp'];
+			$offer_type = $getOrderItem[$i]['offer_type'];
+			$offer_details = $getOrderItem[$i]['offer_details'];
+			$offer_price = $getOrderItem[$i]['offer_price'];
+
+			if (empty($prodID)) {
+				continue;
+			}
+
+			$logData = [
+				'order_id' => $orderID,
+				'user_id' => $userID,
+				'username' => $userData->username,
+				'date_time' => $dateTime,
+				'total_amount' => $totalAmt,
+				'prod_id' => (int) $prodID,
+				'table_name' => $table_name,
+				'quantity' => (int) ($quantity ?? 0),
+				'prod_price' => $prod_price ?? null,
+				'sub_total' => $sub_total ?? null,
+				'size' => $size ?? null,
+				'mrp' => $mrp ?? null,
+				'offer_type' => $offer_type ?? null,
+				'offer_details' => $offer_details ?? null,
+				'offer_price' => $offer_price ?? null,
+			];
+
+
+			$paymentRequestLogModel->insert($logData);
+		}
 
 		return view("payment", ['customerdata' => $customerData, 'order' => $order, 'key_id' => $key_id, 'secret' => $secret, 'previous_url' => $previousURL, 'cancel_orderid' => $orderID]);
 	}
@@ -165,17 +213,18 @@ class RazerpayController extends BaseController
 		$payload = file_get_contents("php://input");
 
 		$signature = $_SERVER['HTTP_X_RAZORPAY_SIGNATURE'] ?? '';
-		// $webhookSecret = getenv('RAZORPAY_WEBHOOK_SECRET_TEST');
+		$webhookSecret = getenv('RAZORPAY_WEBHOOK_SECRET_TEST');
 
 		// Verify signature
-		// $expectedSignature = hash_hmac('sha256', $payload, $webhookSecret);
-		// if (!hash_equals($expectedSignature, $signature)) {
-		// 	return $this->response->setStatusCode(403)->setJSON(['message' => 'Invalid signature']);
-		// }
+		$expectedSignature = hash_hmac('sha256', $payload, $webhookSecret);
+		if (!hash_equals($expectedSignature, $signature)) {
+			return $this->response->setStatusCode(403)->setJSON(['message' => 'Invalid signature']);
+		}
 
 		$data = json_decode($payload, true);
 
 		$event = $data['event'];
+
 
 		$payment = $data['payload']['payment']['entity'];
 
@@ -190,6 +239,13 @@ class RazerpayController extends BaseController
 
 		$orderid = $payment['notes']['order_id'] ?? $payment['order_id'] ?? null;
 		$notes = $payment['notes'];
+
+
+		$db->table('webhook_event')->insert([
+			'event' => $event,
+			'orderid' => $orderid
+		]);
+
 
 		if (!$orderid) {
 			return $this->response->setStatusCode(400)->setJSON(['message' => 'Order ID missing in notes']);
@@ -215,8 +271,14 @@ class RazerpayController extends BaseController
 		];
 		$webhookLog->insert($webhook_log_data);
 
+		$insertID = $webhookLog->getInsertID();
+		if ($insertID) {
+			log_message('debug', 'Webhook log inserted with ID: ' . $insertID);
+		} else {
+			log_message('error', 'Webhook insert failed: ' . json_encode($webhookLog->errors()));
+		}
 
-		if ($event === 'payment.captured') {
+		if ($event === 'payment.captured' || $event === 'order.paid') {
 			$payment_method = $payment['method'];
 
 			// User Details from Notes:

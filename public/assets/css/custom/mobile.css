@@ -89,6 +89,12 @@
 }
 
 @media only screen and (max-width: 391px) {
+  .suggestion {
+    width: 0;
+  }
+  .suggestion-img {
+    margin-right: 0;
+  }
   /*  
   #section-hotsale .items_wrapper {
     width: 0;
@@ -166,15 +172,21 @@
   } */
 }
 @media only screen and (max-width: 768px) {
+  form a {
+    display: flex;
+    justify-content: unset !important;
+  }
+  .suggestion {
+    width: 0;
+  }
+  .suggestion-img {
+    margin-right: 0;
+  }
   .searchInput {
     margin-top: 14% !important;
   }
   #suggestionsBox {
     width: 200% !important;
-  }
-
-  .suggestion-img {
-    width: 100px !important;
   }
 
   .search-container {
@@ -223,8 +235,8 @@
   }
 
   .search-container {
-    width: 100% !important;
-    margin-left: -37% !important;
+    width: 85% !important;
+    margin-left: -25% !important;
   }
 
   form.mobile-search {

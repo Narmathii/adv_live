@@ -418,16 +418,16 @@ require("components/head.php");
   }
 
   @media only screen and (min-width: 392px) and (max-width: 425px) {
-        .change-address {
-        width: 39px !important;
-        height: 36px;
-        border-radius: 5px;
-        font-size: 0;
-        padding: 0;
-        top: ;
-        margin-top: -11%;
-        margin-right: 6%;
-        }
+    .change-address {
+      width: 39px !important;
+      height: 36px;
+      border-radius: 5px;
+      font-size: 0;
+      padding: 0;
+      top: ;
+      margin-top: -11%;
+      margin-right: 6%;
+    }
 
     .change-address i {
       font-size: 16px;

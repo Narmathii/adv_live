@@ -622,13 +622,21 @@ class CartController extends BaseController
         $prodID = $getCart['prod_id'];
         $tableName = $getCart['table_name'];
 
+        $getPrice = $db->query("SELECT offer_price ,quantity FROM `$tableName` WHERE prod_id = ?", [$prodID])->getRowArray();
+        $quantityData = $getPrice['quantity'];
 
-        $getPrice = $db->query("SELECT offer_price FROM `$tableName` WHERE prod_id = ?", [$prodID])->getRowArray();
         if (!$getPrice) {
             return json_encode([
                 'code' => 404,
                 'status' => 'Product not found',
                 'csrf_token' => csrf_hash()
+            ]);
+        }
+
+        if ($qty <= 0 || $qty > $quantityData) {
+            return json_encode([
+                'code' => 404,
+                'status' => 'Invalid Product Quantity',
             ]);
         }
 
@@ -662,6 +670,45 @@ class CartController extends BaseController
             'csrf_token' => csrf_hash()
         ]);
     }
+
+
+    public function getInitialCart()
+    {
+        $db = \Config\Database::connect();
+        $userID = session()->get("user_id");
+
+        if (!$userID) {
+            $res['message'] = "User not authenticated.";
+            $res['status_code'] = 400;
+            echo json_encode($res);
+            return;
+        }
+
+        $cartItems = $db->query(
+            "SELECT prod_price, prod_id, quantity FROM tbl_user_cart WHERE user_id = ? AND flag = 1",
+            [$userID]
+        )->getResultArray();
+
+        if (empty($cartItems)) {
+            $res['message'] = "No items in the cart.";
+            $res['status_code'] = 400;
+            echo json_encode($res);
+            return;
+        }
+
+        $grandTotal = 0;
+        foreach ($cartItems as $item) {
+            $itemTotal = (float) $item['prod_price'];
+            $grandTotal += $itemTotal;
+        }
+
+        $res['total_price'] = $grandTotal;
+        $res['status_code'] = 200;
+        $res['message'] = "Cart fetched successfully.";
+
+        echo json_encode($res);
+    }
+
 
     // ************************************************** UPDATE Address *************************************************************************
 

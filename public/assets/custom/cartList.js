@@ -598,7 +598,7 @@ $(document).ready(function () {
       // ************************************************** QUANTITY *************************************************************************
     });
 
-    calculateFrontendTotal();
+    intialCartCalculation();
 
     $(".btn-increment").click(function () {
       var cartID = $(this).attr("cart_id_data");
@@ -632,6 +632,7 @@ $(document).ready(function () {
         dataType: "json",
         success: function (data) {
           if (data.code == 200) {
+            $(`.quantity_${cartID}`).val(qty);
             $(`.disp_${cartID}`).text("₹" + number_formate(data.sub_total));
 
             $(".total_amt_cal").text("₹" + number_formate(data.total));
@@ -653,17 +654,23 @@ $(document).ready(function () {
       });
     }
 
-    function calculateFrontendTotal() {
-      var totalAmt = 0;
-      $(".display-price").each(function () {
-        let price = $(this).text();
-        let clean = price.replace(",", "").replace("₹", "").trim();
-        let amt = parseFloat(clean);
-        if (!isNaN(amt)) totalAmt += amt;
+    function intialCartCalculation() {
+      $.ajax({
+        type: "GET",
+        url: base_Url + "get-inital-cart",
+        dataType: "json",
+        success: function (data) {
+          if (data.status_code == 200) {
+            $("#final_total").val(data.total_price.toFixed(2));
+            $(".total_amt_cal").text("₹" + number_formate(data.total_price));
+          } else if (data.status_code == 400) {
+            alert(data.message);
+          }
+        },
+        error: function () {
+          alert("Network error. Please try again.");
+        },
       });
-
-      $("#final_total").val(totalAmt.toFixed(2));
-      $(".total_amt_cal").text("₹" + number_formate(totalAmt));
     }
 
     //  ************************************************** CSRF update Token  *****************************************************************
@@ -675,7 +682,6 @@ $(document).ready(function () {
 
     $(document).on("click", ".btnDlt", function () {
       var cart_id = $(this).attr("dlt_id");
-      console.log(cart_id);
 
       $("#myModal").modal("show");
 
@@ -689,7 +695,6 @@ $(document).ready(function () {
             success: function (data) {
               $("#myModal").modal("hide");
               var resData = $.parseJSON(data);
-              console.log(resData);
 
               if (resData.code == 200) {
                 updateCSRF(resData.csrf);

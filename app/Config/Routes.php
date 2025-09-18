@@ -91,6 +91,7 @@ $routes->get('verify-signup-otp', 'LoginControllerr::verifyOTP');
 
 $routes->get('cart-list', 'CartController::cartList');
 $routes->post('update-cart', 'CartController::updateCart');
+$routes->get('get-inital-cart', 'CartController::getInitialCart');
 $routes->get('logout-view', 'LoginControllerr::Logout');
 
 
