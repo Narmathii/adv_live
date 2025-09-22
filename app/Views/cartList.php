@@ -564,7 +564,7 @@ require("components/head.php");
                             <span class="text-center justify-content-center" id="empty-cart">
                               <i class="fa fa-shopping-cart"></i>
                             </span>
-                            <h3 class="product_name text-center"><strong>Your Cart is Empty!!!</strong></h3>
+                            <h4 class="product_name text-center"><strong>Your Cart is Empty!!!</strong></h4>
                           </div>
                         </div>
                       <?php } ?>

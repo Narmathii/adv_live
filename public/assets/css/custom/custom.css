@@ -5094,9 +5094,9 @@ nav,
   .options {
     display: block !important;
   }
-  .suggestion {
+  /* .suggestion {
     width: 0 !important;
-  }
+  } */
 
   .window {
     display: block;
