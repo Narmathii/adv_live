@@ -111,7 +111,6 @@
   .ms-2 {
     margin-left: 2.5rem !important;
   }
-  
 }
 
 @media only screen and (max-width: 391px) {
@@ -135,9 +134,9 @@
     margin-left: -97px !important;
   }
 
-  .suggestion-img {
+  /* .suggestion-img {
     width: 35% !important;
-  }
+  } */
   img .searchInput {
     margin-top: 14% !important;
   }
@@ -212,8 +211,8 @@
     margin-top: 14% !important;
   }
   .suggestion-img {
-    width: 35% !important;
-    height: 75% !important;
+    width: 30% !important;
+    height: 30% !important;
   }
 
   /* .search-container {
