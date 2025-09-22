@@ -67,6 +67,13 @@ require("components/head.php");
                 }
             },
             "handler": function (response) {
+
+                fbq('track', 'Purchase', {
+                    value: <?= esc($order['amount'] / 100) ?>,
+                    currency: 'INR'
+                });
+
+
                 var loader = document.querySelector(".loader");
                 loader.style.display = "flex";
                 loader.style.position = "fixed";

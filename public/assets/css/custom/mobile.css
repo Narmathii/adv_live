@@ -3,6 +3,31 @@
   /* .mobile-search {
     display: none !important;
   } */
+
+  #suggestionsBox {
+    width: 217% !important;
+  }
+
+  .suggestion {
+    width: unset !important;
+  }
+  form a {
+    display: flex;
+    justify-content: unset !important;
+  }
+  .suggestion {
+    width: 0;
+  }
+  .suggestion-img {
+    margin-right: 0;
+  }
+  .searchInput {
+    margin-top: 14% !important;
+  }
+  .suggestion-img {
+    width: 35% !important;
+  }
+
   address.s1 span {
     background: none;
     margin: 0;
@@ -86,6 +111,7 @@
   .ms-2 {
     margin-left: 2.5rem !important;
   }
+  
 }
 
 @media only screen and (max-width: 391px) {
@@ -105,12 +131,12 @@
   }
 
   .search-container {
-    width: 100% !important;
-    margin-left: -37% !important;
+    width: 158% !important;
+    margin-left: -97px !important;
   }
 
   .suggestion-img {
-    width: 100px !important;
+    width: 35% !important;
   }
   img .searchInput {
     margin-top: 14% !important;
@@ -172,10 +198,10 @@
   } */
 }
 @media only screen and (max-width: 768px) {
-  form a {
+  /* form a {
     display: flex;
     justify-content: unset !important;
-  }
+  } */
   .suggestion {
     width: 0;
   }
@@ -185,14 +211,15 @@
   .searchInput {
     margin-top: 14% !important;
   }
-  #suggestionsBox {
-    width: 200% !important;
+  .suggestion-img {
+    width: 35% !important;
+    height: 75% !important;
   }
 
-  .search-container {
+  /* .search-container {
     width: 100% !important;
     margin-left: -37% !important;
-  }
+  } */
   .add-address {
     right: 17px;
     top: 52px;
@@ -229,34 +256,14 @@
   #suggestionsBox {
     width: 200% !important;
   }
-  .suggestion-img {
-    width: 100px !important;
-    max-width: 0 !important;
-  }
 
   .search-container {
-    width: 85% !important;
-    margin-left: -25% !important;
+    width: 110% !important;
+    margin-left: -50% !important;
   }
-
-  form.mobile-search {
-    display: "none" !important;
-  }
-
   .change_btn .change-address i {
     font-size: 16px;
     margin-left: 0;
-  }
-  .suggestion-img {
-    width: 100px;
-    height: 0 !important;
-    margin-right: -102px;
-    object-fit: cover;
-  }
-
-  form.mobile-search > a {
-    display: none !important;
-    justify-content: none !important;
   }
 
   .change-address {
