@@ -83,7 +83,7 @@ require("components/head.php");
                             if (response.code === 200 && response.status === 'success') {
 
                                 fbq('track', 'Purchase', {
-                                    value: <?= esc($order['amount'] / 100) ?>,
+                                    value: <?= number_format($order['amount'] / 100, 2, '.', '') ?>,
                                     currency: 'INR'
                                 });
 

@@ -46,7 +46,6 @@ class LproductController extends BaseController
 
 
 
-
         $productImg = $this->request->getFile('product_img');
 
 
