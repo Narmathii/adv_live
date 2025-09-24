@@ -589,11 +589,15 @@
                                                 <div class="d-info" id="index-offer">
                                                     <div class="d-text">
                                                         <h4><?php echo $new_arrivals[$i]['product_name']; ?></h4>
+
                                                         <span
                                                             class="d-price">₹<?php echo preg_replace("/(\d+?)(?=(\d\d)+(\d)(?!\d))(\.\d+)?/i", "$1,", $new_arrivals[$i]['offer_price']); ?>
-                                                            <small
-                                                                class="<?= $className ?>">₹<?php echo number_format($new_arrivals[$i]['product_price']); ?></small>
+                                                            <?php if (!empty($new_arrivals[$i]['offer_details']) && $new_arrivals[$i]['offer_details'] !== "0") { ?>
+                                                                <small
+                                                                    class="<?= $className ?>">₹<?php echo number_format($new_arrivals[$i]['product_price']); ?></small>
+                                                            <?php } ?>
                                                         </span>
+
                                                         <div class="mt-2">
                                                             <?php
                                                             $tbl_name = $new_arrivals[$i]['tbl_name'];
