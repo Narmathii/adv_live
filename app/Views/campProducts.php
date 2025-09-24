@@ -591,7 +591,7 @@ require("components/head.php");
                                     const offerTypeDetail = product.offer_type;
 
                                     // const offerClass = (product.offer_details == 1 || product.offer_details == 2 || product.offer_details == "" || product.offer_details == 0 || product.offer_details == "-") ? "d-none" : (offerTypeDetail == '1' ? "" : "d-none");
-                                    const offerClass = (offerTypeDetail == 2) ? "d-none" : "";
+                                    const offerClass = (offerTypeDetail == 2 || (offerTypeDetail == 0 && product.offer_details == 0)) ? "d-none" : "";
 
                                     const piceClassname = (product.product_price === product.offer_price) ? 'd-none' : '';
 

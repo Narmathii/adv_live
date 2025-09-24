@@ -232,7 +232,6 @@ class CartCheckoutController extends BaseController
 
                 $cartData = $db->query($query)->getResultArray();
 
-
                 $inner_affectedRows = 0;
 
                 foreach ($cartData as $cartItem) {
@@ -315,7 +314,6 @@ class CartCheckoutController extends BaseController
         }
 
         echo json_encode($res);
-
     }
 
 }
