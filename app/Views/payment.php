@@ -28,6 +28,21 @@ require("components/head.php");
 
     <script>
 
+        var pendingData = new URLSearchParams({
+            order_id: "<?= $order['id'] ?>",
+            user_id: "<?= $customerdata['user_id'] ?>",
+            amount: "<?= $order['amount'] / 100 ?>"
+        }).toString();
+
+        fetch("<?= base_url('payment-pending') ?>", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: pendingData
+        })
+            .then(res => res.json())
+            .then(data => console.log("Pending order stored:", data))
+            .catch(err => console.error("Pending save error:", err));
+
         var options = {
             "key": "<?php echo $key_id ?>",
             "amount": <?php echo $order['amount'] ?>,

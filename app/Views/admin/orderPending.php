@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- TITLE -->
-<title>Delivery list</title>
+<title>Payment Pending Orders</title>
 <html lang="en" dir="ltr" data-nav-layout="vertical" data-theme-mode="light" data-header-styles="light"
     data-menu-styles="dark" data-toggled="close">
 
@@ -35,12 +35,12 @@
 
                 <!-- Page Header -->
                 <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-                    <h1 class="page-title fw-semibold fs-18 mb-0">Delivery list</h1>
+                    <h1 class="page-title fw-semibold fs-18 mb-0">Payment Pending Orders</h1>
                     <div class="ms-md-1 ms-0">
                         <nav>
                             <ol class="breadcrumb mb-0">
-                                <li class="breadcrumb-item"><a href="#">Delivery list</a></li>
-
+                                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Payment Pending Orders</li>
                             </ol>
                         </nav>
                     </div>
@@ -62,9 +62,10 @@
                                                 <th>Customer name</th>
                                                 <th>Order Date</th>
                                                 <th>Order Details</th>
-                                                <th>Payment Status</th>
-                                                <th>Delivery Date</th>
+                                                <!-- <th>Delivery Date</th> -->
                                                 <th>Delivery Status</th>
+                                                <!-- <th>Refund Status</th> -->
+
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -81,31 +82,6 @@
         </div>
     </div>
 </div>
-
-
-<!-- Cancel Product by Admin -->
-<div class="modal fade bs-example-modal" id="cancel_product_modal" tabindex="-1" role="dialog"
-    aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Cancel Reason</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="cancel_reason" class="form-label">Reason for Cancellation</label>
-                    <textarea class="form-control" name="cancel_reason" id="cancel_reason" rows="3"></textarea>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn-primary" id="submit-reason">Submit</a>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <div class="modal fade bs-example-modal-xl modal-xl" id="order_form" tabindex="-1" role="dialog"
     aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -150,7 +126,6 @@
                                             <p class="addr-text" id="state_title">
                                             </p>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -170,8 +145,8 @@
                                             <p class="addr-text" id="total-amt">
                                             </p>
                                             <p class="addr-text" id="payment-sts">
-
                                             </p>
+
                                         </div>
 
                                     </div>
@@ -183,19 +158,41 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row">
-                                <div class="col-xl-12">
+                                <div class="col-xl-12 d-flex">
                                     <div class="card custom-card">
                                         <div class="card-header d-flex justify-content-between">
                                             <div class="card-title">
                                                 Order Items
                                             </div>
-                                            <!-- <div>
-                                                    <b>Tracking Number :</b>
-                                                    <button type="button" class="btn btn-warning my-1 me-2">
-                                                        SPK1218153635
-                                                    </button>
-                                                </div> -->
                                         </div>
+
+
+                                        <input type="hidden" id="cancel-payid">
+                                        <input type="hidden" id="cancel-orderid">
+
+                                        <div
+                                            class="d-flex justify-content-between align-items-center refund_menu d-none">
+                                            <div class="col-lg-6">
+                                                <select class="form-control" name="amount_type" id="amount_type">
+                                                    <option value="">Select Refund Amount</option>
+                                                    <option value="1">
+                                                        With Courier charge
+                                                    </option>
+                                                    <option value="0">
+                                                        Without Courier charge
+                                                    </option>
+                                                </select>
+
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div id="refund-button" class="d-none">
+                                                </div>
+                                                <div id="refund-status" class="d-none">
+                                                </div>
+                                            </div>
+
+                                        </div>
+
                                         <div class="card-body p-0">
                                             <div class="table-responsive">
                                                 <table class="table text-nowrap" id="order-details">
@@ -225,6 +222,9 @@
                             </div>
                         </div>
 
+                        <div class="cancel-reason">
+
+                        </div>
 
                     </div>
 
@@ -269,44 +269,19 @@
                             <span class="error text-danger tracking_id mt-10"></span>
                         </div>
                     </div>
-                    <!-- <div class="col-md-12">
-                        <div class="my-2">
-                            <label for="coupon_code" class="form-label">Coupon Code</label>
-                            <input type="text" class="form-control coupon_code" id="coupon_code"
-                                placeholder="Coupon Code" name="coupon_code" value="">
-                            <span class="error text-danger coupon_code mt-10"></span>
-                        </div>
-                    </div> -->
+
                     <div class="my-2">
                         <label for="coupon_code" class="form-label">Delivery Date</label>
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-text text-muted"> <i class="ri-calendar-line"></i> </div>
-                                <input type="text" class="form-control del-date" name="delivery_date" id="date"
+                                <input type="text" class="form-control" name="delivery_date" id="date"
                                     placeholder="Choose delivery date">
                             </div>
                         </div>
 
                     </div>
-                    <div class="col-md-12">
-                        <div class="my-2">
-                            <label for="bill_no" class="form-label">Bill No</label>
-                            <input type="text" class="form-control bill_no" id="bill_no" placeholder="Bill No"
-                                name="bill_no" value="">
-                            <span class="error text-danger bill_no mt-10"></span>
-                        </div>
-                    </div>
-                    <div class="my-2">
-                        <label for="coupon_code" class="form-label">Bill Date</label>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-text text-muted"> <i class="ri-calendar-line"></i> </div>
-                                <input type="text" class="form-control bill-date" name="bill_date" id="date"
-                                    placeholder="Choose bill date">
-                            </div>
-                        </div>
 
-                    </div>
 
                     <div class="mb-3 d-flex justify-content-end">
                         <a class="btn btn-primary" id="submit-track">Submit</a>
@@ -315,6 +290,7 @@
         </div>
         </form>
     </div>
+
 </div>
 
 
@@ -337,8 +313,6 @@
                                         <th scope="col">Tracking ID</th>
                                         <th scope="col">Delivery Date</th>
                                         <th scope="col">Delivery Message</th>
-                                        <th scope="col">Bill No</th>
-                                        <th scope="col">Bill Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -362,7 +336,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="myLargeModalLabel">Delivery Status</h5>
+                <h5 class="modal-title" id="myLargeModalLabel">Order Status Status</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -372,9 +346,13 @@
                             <select class="form-select" name="delivery_status" id="delivery_status"
                                 aria-label="Default select example">
                                 <option selected>Select Status</option>
-                                <?php foreach ($delivery_sts as $key => $status): ?>
-                                    <option value="<?= $status ?>"><?= $status ?></option>
-                                <?php endforeach; ?>
+                                <?php
+                                for ($i = 1; $i <= 1; $i++) { ?>
+                                    <option value="<?= $delivery_sts[$i] ?>"><?= $delivery_sts[$i] ?></option>
+                                <?php }
+
+                                ?>
+
                             </select>
                         </div>
                 </div>
@@ -402,7 +380,8 @@
 
 </div>
 
-<script src="<?php echo base_url() ?>assets/admin/js/delivery_status.js"></script>
+
+<script src="<?php echo base_url() ?>assets/admin/js/orderPending.js"></script>
 
 
 </body>

@@ -557,6 +557,12 @@ class RazerpayController extends BaseController
 
 	}
 
+	public function paymentPending()
+	{
+     $data = $this->request->getPost();
+	 
+	}
+
 
 
 }

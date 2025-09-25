@@ -140,6 +140,7 @@ $routes->post('payment-status', 'RazerpayController::paymentstatus');
 $routes->get('payment-cancelled', 'RazerpayController::paymentcancel');
 $routes->get('payment-failed', 'RazerpayController::paymentfail');
 $routes->get('success', 'RazerpayController::Success');
+$routes->get('payment-pending', 'RazerpayController::paymentPending');
 // $routes->match(['get', 'post'], 'webhook-payment-status', 'RazerpayController::webhookPaymentStatus');
 
 // $routes->get('success', 'RazerpayController::success');
@@ -298,6 +299,7 @@ $routes->post("get-trackingdetails", "admin\OrderListController::getTrackingDeta
 $routes->post("update-trackingdetail", "admin\OrderListController::updateTrackingDetails");
 $routes->post("view-trackingdetail", "admin\OrderListController::viewTrackingDetails");
 $routes->post("update-delivery-status", "admin\OrderListController::updateDeliveryStatus");
+$routes->post("update-orderpending-status", "admin\OrderListController::updateOrderPendingStatus");
 $routes->post("update-cancel-reason", "admin\OrderListController::updateCancelReason");
 
 
@@ -350,6 +352,10 @@ $routes->post("get-pending-order", "admin\DashboardController::getPendingOrder")
 // Cancelled order details
 $routes->get("cancel-orders", "admin\DashboardController::canceledOrder");
 $routes->post("get-cancelled-order", "admin\DashboardController::getcancelledOrder");
+
+// payment pending order details
+$routes->get("order-pending", "admin\DashboardController::paymentPendingOrder");
+$routes->post("get-order-pending", "admin\DashboardController::getOrderPending");
 
 
 //*************** Courier-partners   ********************** */ 

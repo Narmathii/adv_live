@@ -107,7 +107,6 @@ class OrderListController extends BaseController
             $itemRes = $db->query($itemQuery, [$orderID, $prodID, $color, $hexCode, $size])->getRowArray();
 
 
-
             if ($itemRes) {
                 $itemRes['actual_price'] = $mrp;
                 $itemRes['offer_price'] = $offerPrice;
@@ -241,7 +240,7 @@ class OrderListController extends BaseController
         $query = "UPDATE tbl_orders SET 
                     delivery_status = ?, 
                     delivery_message = ?,
-                    cancel_rea3        son = ?";
+                    cancel_reason = ?";
 
         $params = [$delivery_status, $delivery_message, $cancelReason];
 
@@ -313,6 +312,18 @@ class OrderListController extends BaseController
         echo json_encode($res);
     }
 
+    public function updateOrderPendingStatus()
+    {
+        $db = \Config\Database::connect();
+
+        $data = $this->request->getPost();
+
+        echo "<pre>";
+        print_R($data);
+        die;
+
+
+    }
     public function filterOrders()
     {
         $db = \Config\Database::connect();
@@ -386,6 +397,7 @@ class OrderListController extends BaseController
 
         $query = "SELECT * FROM `tbl_order_item` WHERE `flag` = 1 AND `order_id` = ?";
         $itemDetails = $db->query($query, [$orderID])->getResultArray();
+
 
         $data = [];
 

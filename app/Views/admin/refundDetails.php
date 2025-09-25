@@ -350,7 +350,7 @@
                                 aria-label="Default select example">
                                 <option selected>Select Status</option>
                                 <?php foreach ($delivery_sts as $key => $status): ?>
-                                    <option value="<?= $key + 1 ?>"><?= $status ?></option>
+                                    <option value="<?= $status ?>"><?= $status ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>

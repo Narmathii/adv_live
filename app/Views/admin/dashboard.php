@@ -235,6 +235,47 @@
                 </div>
                 <!--End::row-1 -->
 
+                <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
+                    <h1 class="page-title fw-semibold fs-18 mb-0">Payment Pending Orders</h1>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-xxl-12 col-xl-12">
+                        <div class="row">
+
+                            <div class="col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                <a href="<?php echo base_url() ?>order-pending">
+                                    <div class="card custom-card hrm-main-card danger">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-top">
+                                                <div class="me-3">
+                                                    <span class="avatar bg-danger">
+                                                        <i class="ri-newspaper-line fs-18"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="flex-fill">
+                                                    <span class="fw-semibold text-muted d-block mb-2">Pending
+                                                        Orders</span>
+                                                    <h5 class="fw-semibold mb-2">
+                                                        <?php
+                                                        $totalCount = $order_pending_status[0]['order_pending'];
+                                                        $value = count($order_pending_status) == "" ? 0 : $totalCount ?>
+                                                        <?php echo $value ?>
+                                                    </h5>
+                                                    <p class="mb-0">
+                                                        <span class="badge bg-danger-transparent">View Details</span>
+                                                    </p>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
 
