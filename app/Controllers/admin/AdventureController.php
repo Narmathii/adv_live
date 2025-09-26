@@ -22,6 +22,20 @@ class AdventureController extends BaseController
         GROUP BY delivery_status")->getResultArray();
         $res['delivery_status'] = $db->query("SELECT COUNT(`order_id`) AS delivery_status FROM `tbl_orders` WHERE  flag= 1 AND `delivery_status` = 5
         GROUP BY delivery_status")->getResultArray();
+        $res['order_pending_status'] = $db->query("
+    SELECT 
+        COUNT(a.order_id) AS order_pending,
+        MAX(b.rzporder_id) AS rzporder_id
+    FROM tbl_orders AS a
+    INNER JOIN payment_orderpending_log AS b ON a.order_id = b.order_id
+    WHERE a.flag = 1 
+      AND a.delivery_status = 1 
+      AND b.rzporder_id <> ''
+    GROUP BY a.delivery_status
+")->getResultArray();
+
+
+
 
         $res['refund_status'] = $db->query("
         SELECT COUNT(`order_id`) AS delivery_status 
@@ -65,7 +79,7 @@ class AdventureController extends BaseController
                                     ")->getResultArray();
         $res['stock_count'] = count($res['stock_status']);
 
-        
+
 
 
 

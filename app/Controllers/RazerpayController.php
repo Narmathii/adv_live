@@ -7,8 +7,7 @@ use Razorpay\Api\Api;
 
 use App\Models\ProductTallyMappingModel;
 use App\Models\PaymentRequestLog;
-use App\Models\WebhookPaymentLog;
-
+use App\Models\OrderPendingModel;
 
 
 class RazerpayController extends BaseController
@@ -27,6 +26,8 @@ class RazerpayController extends BaseController
 		$orderID = session()->get('order_id');
 
 		$data = $this->request->getPost();
+
+		$previousURL = previous_url();
 
 		// Check the orderID is already has rzporderID
 		$orderQuery = "SELECT `order_id` 
@@ -47,8 +48,6 @@ class RazerpayController extends BaseController
 		}
 		// Check the orderID is already has rzp orderID
 
-
-		$previousURL = previous_url();
 
 
 		$userID = session()->get('user_id');
@@ -86,6 +85,7 @@ class RazerpayController extends BaseController
 			'number' => $userData->number,
 			'user_id' => $userID,
 			'order_id' => $orderID,
+
 		];
 
 
@@ -133,175 +133,128 @@ class RazerpayController extends BaseController
 				'offer_price' => $offer_price ?? null,
 			];
 
-
 			$paymentRequestLogModel->insert($logData);
 		}
 
-		return view("payment", ['customerdata' => $customerData, 'order' => $order, 'key_id' => $key_id, 'secret' => $secret, 'previous_url' => $previousURL, 'cancel_orderid' => $orderID]);
+		return view("payment", ['customerdata' => $customerData, 'order' => $order, 'key_id' => $key_id, 'secret' => $secret, 'previous_url' => $previousURL]);
 	}
 
-	public function Success()
+
+	public function paymentcancel($segment)
 	{
-		$successData = [
-			'orderid' => session()->get('orderid'),
-			'paymentid' => session()->get('paymentid'),
-			'status' => session()->get('status'),
+
+		$userID = session()->get('user_id');
+		$data = $this->request->getPost();
+
+
+		$db = \Config\Database::connect();
+		$response_data = $segment;
+
+		parse_str($response_data, $response_params);
+		$reason = isset($response_params['reason']) ? $response_params['reason'] : null;
+		$razerpayOrderID = isset($response_params['order_id']) ? $response_params['order_id'] : null;
+
+
+		// Updating razerpay order id ,payment id ,paymentstatus 
+		$orderID = session()->get('order_id');
+		$deliveryMsg = 6;
+		$payment_id = "NULL";
+		$razorpay_signature = "NULL";
+		$Orderstatus = "Cancelled Transaction";
+		$deliveryStatus = 6;
+		$payment_status = 4;
+		$cancelReason = "Payment was Cancelled by customer";
+		$orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,delivery_message = ? ,delivery_status = ?,payment_status = ?,cancel_reason= ? WHERE order_id = ?";
+		$updateData = $db->query($orderQry, [$payment_id, $razerpayOrderID, $razorpay_signature, $Orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $cancelReason, $orderID]);
+
+		if ($updateData) {
+			$data = [
+				'reason' => $reason,
+				'order_id' => $razerpayOrderID,
+				'status' => 'cancelled'
+			];
+			return view("cancelled", $data);
+		}
+
+	}
+
+	public function paymentfail($segment)
+	{
+		$orderID = session()->get('user_id');
+
+		$db = \Config\Database::connect();
+		$response_data = $segment;
+
+
+		parse_str($response_data, $response_params);
+
+		// Extract individual parameters
+		$order_id = isset($response_params['order_id']) ? $response_params['order_id'] : null;
+		$payment_id = isset($response_params['payment_id']) ? $response_params['payment_id'] : null;
+		$Orderstatus = 'Failure';
+		$razorpay_signature = "NULL";
+		$cancelReason = "Payment was unsuccessful as it was cancelled by the customer.";
+
+
+		// Updating razerpay order id ,payment id ,paymentstatus 
+		$orderID = session()->get('order_id');
+		$deliveryMsg = 6;
+		$deliveryStatus = 6;
+		$payment_status = 3;
+		$orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,
+		             delivery_message = ?,delivery_status = ?,payment_status = ? ,cancel_reason = ? WHERE order_id = ?";
+		$updateData = $db->query($orderQry, [$payment_id, $order_id, $razorpay_signature, $Orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $cancelReason, $orderID]);
+
+		$data = [
+			'orderid' => $order_id,
+			'paymentid' => $payment_id,
+			'status' => $Orderstatus,
 		];
 
-		return view('success', $successData);
-
-	}
-
-	public function paymentfail()
-	{
-		session()->set('payment_attempted', true);
-		session()->set('payment_status', 'failed');
-		session()->set('payment_redirect', 'payment-failed');
-
-		return view('failure');
-	}
-
-	public function paymentcancel()
-	{
-		session()->set('payment_attempted', true);
-		session()->set('payment_status', 'cancelled');
-		session()->set('payment_redirect', 'cancel');
-
-		$request = service('request');
-		$data = $request->getGet();
-		$db = \Config\Database::connect();
-
-		$orderId = $request->getGet('order_id');
-		$cancelReason = $request->getGet('reason') ?? 'User cancelled payment';
-		$orderStatus = "Cancelled Transaction";
-		$paymentStatus = 'CANCELLED';
-
-		$deliveryStatus = 'Cancelled';
-		$deliveryConfig = new \Config\DeliveryMessages();
-		$deliveryMsg = $deliveryConfig->messages[$deliveryStatus] ?? 'No message available';
-
-		$updateOrderQry = "
-        UPDATE `tbl_orders` 
-        SET `payment_status` = ?, 
-            `cancel_reason` = ?,
-             `delivery_message` = ?,
-             `delivery_status` = ?, 
-            `updated_at` = NOW(),
-            `order_status` = ?
-        WHERE `order_id` = ?
-    ";
-		$updateOrder = $db->query($updateOrderQry, [$paymentStatus, $cancelReason, $deliveryMsg, $deliveryStatus, $orderStatus, $orderId]);
-
-		$affectedRows = $db->affectedRows();
-
-		if ($affectedRows) {
-			return view('cancelled', ['cancelled_reason' => $cancelReason]);
-		} else {
-			return view('cancelled', ['cancel_reason' => 'Could not update cancellation status.']);
+		if ($updateData) {
+			return view("failure", $data);
 		}
 	}
 
-	public function webhookPaymentStatus()
+	public function paymentstatus()
 	{
-
+		// Load the model
 		$tallyModal = new ProductTallyMappingModel();
-		$webhookLog = new WebhookPaymentLog();
 
 		$this->session = \Config\Services::session();
 		$db = \Config\Database::connect();
-
-		$payload = file_get_contents("php://input");
-
-		$signature = $_SERVER['HTTP_X_RAZORPAY_SIGNATURE'] ?? '';
-		$webhookSecret = getenv('RAZORPAY_WEBHOOK_SECRET_TEST');
-
-		// Verify signature
-		$expectedSignature = hash_hmac('sha256', $payload, $webhookSecret);
-		if (!hash_equals($expectedSignature, $signature)) {
-			return $this->response->setStatusCode(403)->setJSON(['message' => 'Invalid signature']);
-		}
-
-		$data = json_decode($payload, true);
-
-		$event = $data['event'];
+		$data = $this->request->getPost();
 
 
-		$payment = $data['payload']['payment']['entity'];
+		$razorpay_payment_id = $this->request->getPost('razorpay_payment_id');
+		$razorpay_order_id = $this->request->getPost('razorpay_order_id');
+		$razorpay_signature = $this->request->getPost('razorpay_signature');
+		$orderstatus = "success";
 
-		// For Failure
-		$reason = $payment['error_reason'] ?? '';
-		$code = $payment['error_code'] ?? '';
-		$description = $payment['error_description'] ?? '';
+		$secret = $_ENV['RAZORPAY_KEY_SECRET'];
+		$api = new Api($_ENV['RAZORPAY_KEY_ID'], $secret);
 
-		$razorpay_payment_id = $payment['id'];
-		$razorpay_order_id = $payment['order_id'];
-		$payment_status = $payment['status'];
-
-		$orderid = $payment['notes']['order_id'] ?? $payment['order_id'] ?? null;
-		$notes = $payment['notes'];
+		$data = $razorpay_order_id . "|" . $razorpay_payment_id;
 
 
-		$db->table('webhook_event')->insert([
-			'event' => $event,
-			'orderid' => $orderid
-		]);
+		$generated_signature = hash_hmac("sha256", $data, $secret);
+		// to get payment method
+		$payment = $api->payment->fetch($razorpay_payment_id);
+
+		$razerpay_paystatus = $payment->status;
 
 
-		if (!$orderid) {
-			return $this->response->setStatusCode(400)->setJSON(['message' => 'Order ID missing in notes']);
-		}
+		if ($razerpay_paystatus == "captured") {
+			if ($generated_signature == $razorpay_signature) {
+				$payment_method = $payment->method;
 
-		if ($event === 'payment.captured') {
-			// webhook-log
-			$createdAt = time();
-			$dateTime = (new \DateTime("@$createdAt"))
-				->setTimezone(new \DateTimeZone('Asia/Kolkata'))
-				->format('Y-m-d H:i:s');
+				// to get orderID,Userid 
+				$orderDetails = $this->fetchOrderDetails($razorpay_order_id, $secret);
 
-			$webhook_log_data = [
-				'order_id' => $notes['order_id'],
-				'user_id' => $notes['user_id'],
-				'username' => $notes['username'],
-				'razorpay_payment_id' => $razorpay_payment_id,
-				'razorpay_order_id' => $razorpay_order_id,
-				'razorpay_signature' => $signature,
-				'date_time' => $dateTime,
-				'payment_method' => $payment['method'],
-				'total_amount' => $payment['amount'],
-				'payment_status' => $payment['status']
-			];
-			$webhookLog->insert($webhook_log_data);
+				$userID = $orderDetails['notes']['user_id'];
+				$orderID = $orderDetails['notes']['order_id'];
+				$username = $orderDetails['notes']['username'];
 
-			$insertID = $webhookLog->getInsertID();
-			if ($insertID) {
-				log_message('debug', 'Webhook log inserted with ID: ' . $insertID);
-			} else {
-				log_message('error', 'Webhook insert failed: ' . json_encode($webhookLog->errors()));
-			}
-
-		} else if ($event === 'order.paid') {
-			$payment_method = $payment['method'];
-
-			$userID = $notes['user_id'];
-			$orderID = $orderid;
-			$username = $notes['username'];
-
-
-			// Updating Order Status
-			$deliveryStatus = 'New';
-			$deliveryConfig = new \Config\DeliveryMessages();
-			$deliveryMsg = $deliveryConfig->messages[$deliveryStatus] ?? 'No message available';
-
-
-			$payment_status = 'COMPLETED';
-			$orderstatus = "success";
-
-
-			$orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,delivery_message = ?,delivery_status = ?,payment_status = ?,payment_method = ? WHERE order_id = ?";
-			$updateData = $db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $signature, $orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $payment_method, $orderID]);
-			$affectedRows = $db->affectedRows();
-
-			if ($affectedRows > 0) {
 				$sess = [
 					'user_id' => $userID,
 					'username' => $username,
@@ -310,15 +263,14 @@ class RazerpayController extends BaseController
 				];
 				$this->session->set($sess);
 
-
-
-				// Delete Products from cart 
+				// After successful payment delete the products from cart
 				$query = "SELECT a.cart_id, a.`table_name`, a.`prod_id`, a.`quantity`, a.`prod_price`, a.`sub_total`, b.add_id 
 				FROM `tbl_user_cart` AS a 
 				INNER JOIN tbl_user_address AS b ON a.`user_id` = b.user_id 
 				WHERE a.flag = 1 AND b.flag = 1 AND a.user_id = $userID  AND b.default_addr = 1";
 
 				$cartData = $db->query($query)->getResultArray();
+
 
 				foreach ($cartData as $cartItem) {
 					$prodID = $cartItem['prod_id'];
@@ -341,6 +293,7 @@ class RazerpayController extends BaseController
 					$color = $items['color'];
 
 
+
 					// get product qty from product table
 					$getqty = "SELECT `quantity` FROM `$tblName` WHERE `prod_id` = ? AND flag = 1";
 					$oldQty = $db->query($getqty, [$prodID])->getRow();
@@ -351,11 +304,11 @@ class RazerpayController extends BaseController
 
 					// update new qty to product table
 					$db->query("SET @source = 'appteq'");
-					$updateQry = "UPDATE  `$tblName` SET quantity = ? WHERE prod_id = ?";
-					$updateRes = $db->query($updateQry, [$updatedQty, $prodID]);
+					$updateQry = "UPDATE  `$tblName` SET quantity = ? WHERE prod_id = ? AND tbl_name = ?";
+					$updateRes = $db->query($updateQry, [$updatedQty, $prodID, $tblName]);
 
 
-					$payment_status = 'COMPLETED';
+					$payment_status = 2;
 
 					$menuMappings = [
 						'tbl_accessories_list' => [
@@ -520,55 +473,131 @@ class RazerpayController extends BaseController
                             SET colour = ?, size = ?, soldout_status = ?
                             WHERE prod_id = ? AND tbl_name = ? AND flag = 1";
 
-								$updateConfigRes = $db->query($updateConfigQry, [null, $updatedSizeData, $updatedStockData, $prodID, $tblName]);
+								$updateConfigRes = $db->query($updateConfigQry, [$updatedColorData, $updatedSizeData, $updatedStockData, $prodID, $tblName]);
 							}
 						}
 					}
 
 				}
-				$result = [
-					'code' => 200,
-					'status' => 'success',
-					'message' => "Orders updated successfully"
-				];
-			} else {
-				$result = [
-					'code' => 400,
-					'status' => 'failure',
-					'message' => "Orders update failed"
-				];
+
+				// Updating razerpay order id ,payment id ,paymentstatus to order tbl
+				$deliveryMsg = 2;
+				$deliveryStatus = 2;
+
+				$orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,delivery_message = ?,delivery_status = ?,payment_status = ?,payment_method = ? WHERE order_id = ?";
+				$updateData = $db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $razorpay_signature, $orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $payment_method, $orderID]);
+
+				$affectedRows = $db->affectedRows();
+
+				if ($affectedRows == 1) {
+					$successData = [
+						'orderid' => $razorpay_order_id,
+						'paymentid' => $razorpay_payment_id,
+						'status' => $orderstatus,
+					];
+
+
+					session()->set($successData);
+
+					$result['code'] = 200;
+					$result['status'] = 'success';
+					$result['message'] = "Stock updated successfully";
+					return $this->response->setJSON($result);
+				} else {
+					echo "error";
+				}
 			}
-			echo json_encode($result);
 
-		} elseif ($event === 'payment.failed') {
-			$orderID = $orderid;
-			$payment_status = 'FAILED';
-			$order_status = "Failure";
-
-			$deliveryStatus = 'Cancelled';
-			$deliveryConfig = new \Config\DeliveryMessages();
-			$deliveryMsg = $deliveryConfig->messages[$deliveryStatus] ?? 'No message available';
-
-
-			$updateOrderQry = "UPDATE `tbl_orders` SET  razerpay_payment_id = ? , razerpay_order_id =? , razerpay_signature = ? ,delivery_message = ?,delivery_status = ? ,`payment_status` = ? , `cancel_reason` =? ,`order_status` = ? WHERE order_id = ?";
-			$updateData = $db->query($updateOrderQry, [$razorpay_payment_id, $razorpay_order_id, $signature, $deliveryMsg, $deliveryStatus, $payment_status, $reason, $order_status, $orderid]);
-			return $this->response->setStatusCode(200)->setJSON(['message' => "Payment failed data updated successfully"]);
-
-		} elseif ($event === 'payment.authorized') {
+		} else if ($razerpay_paystatus == "pending") {
 
 			$Orderstatus = 'Pending';
+			$razorpay_signature = "NULL";
 
-			$deliveryStatus = 'Order pending';
-			$deliveryConfig = new \Config\DeliveryMessages();
-			$deliveryMsg = $deliveryConfig->messages[$deliveryStatus] ?? 'No message available';
-
-			$payment_status = 'PENDING';
+			// Updating razerpay order id ,payment id ,paymentstatus 
+			$orderID = session()->get('order_id');
+			$deliveryMsg = "Your order is pending.";
+			$deliveryStatus = 1;
+			$payment_status = 1;
 			$orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,
 						 delivery_message = ?,delivery_status = ?,payment_status = ? WHERE order_id = ?";
-			$updateData = $db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $signature, $Orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $orderid]);
+			$updateData = $db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $razorpay_signature, $Orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $orderID]);
 		}
+
+
 	}
 
+	public function fetchOrderDetails($razorpay_order_id, $secret)
+	{
+		$key_id = $_ENV['RAZORPAY_KEY_ID'];
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, 'https://api.razorpay.com/v1/orders/' . $razorpay_order_id);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+		curl_setopt($ch, CURLOPT_USERPWD, $key_id . ':' . $secret);
+
+		$result = curl_exec($ch);
+		if (curl_errno($ch)) {
+			echo 'Error:' . curl_error($ch);
+		}
+		curl_close($ch);
+
+		return json_decode($result, true);
+	}
+
+	public function Success()
+	{
+		$successData = [
+			'orderid' => session()->get('orderid'),
+			'paymentid' => session()->get('paymentid'),
+			'status' => session()->get('status'),
+		];
+
+		return view('success', $successData);
+
+	}
+
+	public function paymentPending()
+	{
+		$db = \Config\Database::connect();
+
+		$ordersPendingModel = new OrderPendingModel();
+
+
+		$order_id = $this->request->getPost('order_id');
+		$user_id = $this->request->getPost('user_id');
+		$rzp_orderid = $this->request->getPost('rzporder_id');
+		$order_pending_log = json_encode($this->request->getPost());
+
+
+		if (!$order_id || !$user_id) {
+			return $this->response->setJSON([
+				'status' => 'error',
+				'message' => 'Missing required fields'
+			]);
+		}
+
+		$finalData = [
+			'order_id' => $order_id,
+			'user_id' => $user_id,
+			'rzporder_id' => $rzp_orderid,
+			'order_pending_log' => $order_pending_log,
+		];
+
+
+
+		$ordersPendingModel->insert($finalData);
+
+		if ($db->affectedRows() > 0) {
+			return $this->response->setJSON([
+				'status' => 'success',
+				'message' => 'Pending order stored successfully'
+			]);
+		} else {
+			return $this->response->setJSON([
+				'status' => 'error',
+				'message' => 'No record updated (check order_id, user_id, or flag)'
+			]);
+		}
+	}
 }
-
-

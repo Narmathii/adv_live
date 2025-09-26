@@ -134,16 +134,23 @@ $routes->get('check-userlogin', 'CartCheckoutController::checkLoginRes');
 $routes->get('check-address', 'CartCheckoutController::checkAddress', ['filter' => 'SessionAuth']);
 $routes->get('place-order', 'CartCheckoutController::placeOrder', ['filter' => 'SessionAuth']);
 
-// RazerpayController checkout controller
+// Webhook checkout controller
+$routes->post('webhook-payment-status', 'WebhookController::paymentstatus');
+$routes->get('payment-cancelled', 'WebhookController::paymentcancel');
+$routes->get('payment-failed', 'WebhookController::paymentfail');
+$routes->get('payment-success', 'WebhookController::Success');
+$routes->match(['get', 'post'], 'webhook-payment-status', 'WebhookController::webhookPaymentStatus');
+
+// RazerpayController
 $routes->get('payment', 'RazerpayController::payment', ['filter' => 'PaymentAuth']);
 $routes->post('payment-status', 'RazerpayController::paymentstatus');
-$routes->get('payment-cancelled', 'RazerpayController::paymentcancel');
-$routes->get('payment-failed', 'RazerpayController::paymentfail');
+$routes->get('payment-cancelled/(:any)', 'RazerpayController::paymentcancel/$1');
+$routes->get('payment-failed/(:any)', 'RazerpayController::paymentfail/$1');
 $routes->get('success', 'RazerpayController::Success');
-$routes->match(['get', 'post'], 'webhook-payment-status', 'RazerpayController::webhookPaymentStatus');
+$routes->post('payment-pending', 'RazerpayController::paymentPending');
+
 
 // $routes->get('success', 'RazerpayController::success');
-
 $routes->post('add-wishlist', "WishlistController::addwishlist");
 $routes->post('delete-wishlist', "WishlistController::deletewishlist");
 
@@ -299,7 +306,7 @@ $routes->post("update-trackingdetail", "admin\OrderListController::updateTrackin
 $routes->post("view-trackingdetail", "admin\OrderListController::viewTrackingDetails");
 $routes->post("update-delivery-status", "admin\OrderListController::updateDeliveryStatus");
 $routes->post("update-cancel-reason", "admin\OrderListController::updateCancelReason");
-
+$routes->post("update-orderpending-status", "admin\OrderListController::updateOrderPendingStatus");
 
 //*************** User Address   ********************** */ 
 $routes->get('state-list', 'admin\AddressController::stateList');
@@ -351,6 +358,9 @@ $routes->post("get-pending-order", "admin\DashboardController::getPendingOrder")
 $routes->get("cancel-orders", "admin\DashboardController::canceledOrder");
 $routes->post("get-cancelled-order", "admin\DashboardController::getcancelledOrder");
 
+// payment pending order details
+$routes->get("order-pending", "admin\DashboardController::paymentPendingOrder");
+$routes->post("get-order-pending", "admin\DashboardController::getOrderPending");
 
 //*************** Courier-partners   ********************** */ 
 $routes->get('courier-partners', 'admin\CourierController::courierPartner');

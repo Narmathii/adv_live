@@ -8,7 +8,7 @@ class OrdersModel extends Model
 {
 
     protected $table = 'tbl_orders';
-    protected $primaryKey = 'order_id	';
+    protected $primaryKey = 'order_id';
     protected $allowedFields = [
         'order_no',
         'user_id',
@@ -20,7 +20,7 @@ class OrdersModel extends Model
         'delivery_message',
         'courier_charge',
         'courier_type',
-        'drop_shipping'
+        'drop_shipping',
 
     ];
 }

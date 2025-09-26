@@ -218,7 +218,7 @@ class DashboardController extends BaseController
           ORDER BY    STR_TO_DATE(a.order_date, '%d-%m-%Y') ASC;";
         $CancelOrders = $db->query($query)->getResultArray();
 
-        
+
 
 
 
@@ -279,5 +279,60 @@ class DashboardController extends BaseController
 
 
         echo json_encode($CancelOrders);
+    }
+
+
+    public function paymentPendingOrder()
+    {
+        $db = \Config\Database::connect();
+
+        $query = "SELECT `delivery_status` FROM `tbl_orders` WHERE `flag` = 1";
+        $res['pending_order'] = $db->query($query)->getResultArray();
+
+        $session = \Config\Services::session();
+
+        if ($session->get('login_sts') == "") {
+            return redirect()->to('admin');
+        } else {
+            $query = "SHOW COLUMNS FROM tbl_orders LIKE 'delivery_status'";
+            $result = $db->query($query)->getRow();
+
+            if ($result) {
+                // Extract ENUM values from the Type field
+                preg_match("/^enum\((.*)\)$/", $result->Type, $matches);
+                if (!empty($matches[1])) {
+                    $enumValues = explode(",", str_replace("'", "", $matches[1]));
+                    // return $enumValues;
+                }
+            }
+
+            $res['delivery_sts'] = $enumValues;
+
+
+
+            return view('admin/orderPending', $res);
+        }
+    }
+
+    public function getOrderPending()
+    {
+        $db = \Config\Database::connect();
+        $query = "
+    SELECT a.*, 
+           b.*, 
+           c.rzporder_id, 
+           DATE_FORMAT(a.order_date, '%d-%m-%Y') AS date, 
+           DATE_FORMAT(a.delivery_date, '%d-%m-%Y') AS delivery_date
+    FROM tbl_orders AS a
+    INNER JOIN tbl_users AS b ON a.user_id = b.user_id
+    LEFT JOIN payment_orderpending_log AS c ON c.order_id = a.order_id
+    WHERE a.flag = 1 
+      AND a.delivery_status = 1 
+      AND b.flag = 1
+      AND c.rzporder_id <> '' AND a.payment_status = 'PENDING'
+    ORDER BY a.order_date ASC";
+        $orderDetail = $db->query($query)->getResultArray();
+
+        echo json_encode($orderDetail);
     }
 }
