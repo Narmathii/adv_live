@@ -167,14 +167,14 @@ $(document).ready(function () {
               if (data.code === 200) {
                 Swal.fire({
                   title: "Success",
-                  text: data.message,
+                  text: data.msg,
                   icon: "success",
                 });
                 $("#delivery-status").modal("hide");
               } else {
                 Swal.fire({
                   title: "Failure",
-                  text: data.message,
+                  text: data.msg,
                   icon: "error",
                 });
                 $("#delivery-status").modal("hide");

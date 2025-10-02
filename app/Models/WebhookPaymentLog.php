@@ -19,7 +19,8 @@ class WebhookPaymentLog extends Model
         'date_time',
         'payment_method',
         'total_amount',
-        'payment_status'
+        'payment_status',
+        'event_log'
 
     ];
 }

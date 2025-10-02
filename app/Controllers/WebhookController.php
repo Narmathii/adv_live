@@ -80,7 +80,7 @@ class WebhookController extends BaseController
 		}
 	}
 
-	public function webhookPaymentStatus()
+	public function paymentstatus()
 	{
 
 		$tallyModal = new ProductTallyMappingModel();
@@ -95,10 +95,10 @@ class WebhookController extends BaseController
 		$webhookSecret = getenv('RAZORPAY_WEBHOOK_SECRET_TEST');
 
 		// Verify signature
-		// $expectedSignature = hash_hmac('sha256', $payload, $webhookSecret);
-		// if (!hash_equals($expectedSignature, $signature)) {
-		// 	return $this->response->setStatusCode(403)->setJSON(['message' => 'Invalid signature']);
-		// }
+		$expectedSignature = hash_hmac('sha256', $payload, $webhookSecret);
+		if (!hash_equals($expectedSignature, $signature)) {
+			return $this->response->setStatusCode(403)->setJSON(['message' => 'Invalid signature']);
+		}
 
 		$data = json_decode($payload, true);
 
@@ -430,6 +430,68 @@ class WebhookController extends BaseController
 			return $this->response->setStatusCode(200)->setJSON(['message' => "Payment pending data updated successfully"]);
 
 		}
+	}
+
+	public function webhookPaymentLog()
+	{
+		$webhookLog = new WebhookPaymentLog();
+		$payload = file_get_contents("php://input");
+
+		$webhookSecret = getenv('RAZORPAY_WEBHOOK_SECRET');
+		$signature = $_SERVER['HTTP_X_RAZORPAY_SIGNATURE'] ?? '';
+
+		// Verify signature
+		$expectedSignature = hash_hmac('sha256', $payload, $webhookSecret);
+		if (!hash_equals($expectedSignature, $signature)) {
+
+			return $this->response
+				->setStatusCode(200)
+				->setJSON(['message' => 'Signature invalid, but acknowledged']);
+		}
+
+		$data = json_decode($payload, true);
+
+		$eventLog = json_encode($data);
+		$payment = $data['payload']['payment']['entity'];
+
+		// Error details (for failed payments)
+		$reason = $payment['error_reason'] ?? '';
+		$code = $payment['error_code'] ?? '';
+		$description = $payment['error_description'] ?? '';
+
+		$razorpay_payment_id = $payment['id'] ?? null;
+		$razorpay_order_id = $payment['order_id'] ?? null;
+		$payment_status = $payment['status'] ?? null;
+		$notes = $payment['notes'] ?? [];
+
+		$order_id = $notes['order_id'] ?? $razorpay_order_id;
+		$user_id = $notes['user_id'] ?? null;
+		$username = $notes['username'] ?? null;
+
+		$createdAt = time();
+		$dateTime = (new \DateTime("@$createdAt"))
+			->setTimezone(new \DateTimeZone('Asia/Kolkata'))
+			->format('Y-m-d H:i:s');
+
+
+		$webhook_log_data = [
+			'order_id' => $order_id,
+			'user_id' => $user_id,
+			'username' => $username,
+			'razorpay_payment_id' => $razorpay_payment_id,
+			'razorpay_order_id' => $razorpay_order_id,
+			'date_time' => $dateTime,
+			'payment_method' => $payment['method'] ?? null,
+			'total_amount' => $payment['amount'] ?? 0,
+			'payment_status' => $payment_status,
+			'event_log' => $eventLog,
+		];
+
+		$webhookLog->insert($webhook_log_data);
+
+		return $this->response
+			->setStatusCode(200)
+			->setJSON(['message' => "Webhook event saved successfully!"]);
 	}
 
 }

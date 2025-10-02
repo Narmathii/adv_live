@@ -139,7 +139,7 @@ $routes->post('webhook-payment-status', 'WebhookController::paymentstatus');
 $routes->get('payment-cancelled', 'WebhookController::paymentcancel');
 $routes->get('payment-failed', 'WebhookController::paymentfail');
 $routes->get('payment-success', 'WebhookController::Success');
-$routes->match(['get', 'post'], 'webhook-payment-status', 'WebhookController::webhookPaymentStatus');
+$routes->match(['get', 'post'], 'webhook-payment-log', 'WebhookController::webhookPaymentLog');
 
 // RazerpayController
 $routes->get('payment', 'RazerpayController::payment', ['filter' => 'PaymentAuth']);

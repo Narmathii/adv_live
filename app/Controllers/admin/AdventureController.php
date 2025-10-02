@@ -29,7 +29,7 @@ class AdventureController extends BaseController
     FROM tbl_orders AS a
     INNER JOIN payment_orderpending_log AS b ON a.order_id = b.order_id
     WHERE a.flag = 1 
-      AND a.delivery_status = 1 
+      AND a.delivery_status = 1  
       AND b.rzporder_id <> ''
     GROUP BY a.delivery_status
 ")->getResultArray();
