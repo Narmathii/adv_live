@@ -425,7 +425,7 @@
                                     <div class="container banner_container">
                                         <div class="banner_content">
                                             <h1>Two wheels,endless adventures.</h1>
-                                            <h1></h1>
+                                            
                                         </div>
                                     </div>
                                 </div>

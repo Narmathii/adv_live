@@ -699,7 +699,8 @@ class CartController extends BaseController
         $grandTotal = 0;
         foreach ($cartItems as $item) {
             $itemTotal = (float) $item['prod_price'];
-            $grandTotal += $itemTotal;
+            $cartTotal = $itemTotal * $item['quantity'];
+            $grandTotal += $cartTotal;
         }
 
         $res['total_price'] = $grandTotal;
