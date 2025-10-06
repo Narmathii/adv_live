@@ -21,6 +21,7 @@ class OrdersModel extends Model
         'courier_charge',
         'courier_type',
         'drop_shipping',
+        'order_time'
 
     ];
 }

@@ -53,8 +53,12 @@ $(document).ready(function () {
           mDataProp: "username",
         },
         {
-          mDataProp: "order_date",
+          data: null,
+          render: function (data, type, row) {
+            return row.order_date + " " + row.order_time;
+          },
         },
+
         {
           mDataProp: function (data, type, full, meta) {
             return (

@@ -34,13 +34,11 @@ class OrderListController extends BaseController
     {
         $db = \Config\Database::connect();
         $query =
-            "SELECT a.*, b.*, DATE_FORMAT(a.order_date, '%d-%m-%Y') AS date ,  DATE_FORMAT(a.delivery_date, '%d-%m-%Y')  AS deliverydate
+            "SELECT a.*, b.*, DATE_FORMAT(a.order_date, '%d-%m-%Y') AS date ,DATE_FORMAT(a.order_time, '%H:%i:%s') AS order_time ,  DATE_FORMAT(a.delivery_date, '%d-%m-%Y')  AS deliverydate
             FROM tbl_orders AS a INNER JOIN 
             tbl_users AS b ON a.`user_id` = b.user_id
             WHERE a.flag = 1 AND b.flag = 1 AND a.order_status <> 'initiated' AND  a.payment_status <> 'PENDING'";
         $orderDetail = $db->query($query)->getResultArray();
-
-
 
         echo json_encode($orderDetail);
     }
@@ -293,6 +291,7 @@ class OrderListController extends BaseController
             $query .= ", shipped_date = NOW()";
         } elseif ($delivery_status == 5) {
             $query .= ", delivery_date = NOW()";
+
         }
 
 

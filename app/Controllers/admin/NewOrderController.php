@@ -38,7 +38,7 @@ class NewOrderController extends BaseController
 
         $db = \Config\Database::connect();
         $query =
-            "SELECT a.*, b.*, DATE_FORMAT(a.order_date, '%d-%m-%Y') AS date , DATE_FORMAT(a.delivery_date, '%d-%m-%Y')  AS delivery_date FROM tbl_orders AS a INNER JOIN 
+            "SELECT a.*, b.*, DATE_FORMAT(a.order_date, '%d-%m-%Y') AS date ,DATE_FORMAT(a.order_time, '%H:%i:%s') AS order_time , DATE_FORMAT(a.delivery_date, '%d-%m-%Y')  AS delivery_date FROM tbl_orders AS a INNER JOIN 
             tbl_users AS b ON a.`user_id` = b.user_id
             WHERE a.flag = 1 AND b.flag = 1 AND a.delivery_status =  2 AND a.order_status <> 'initiated'
             ORDER BY `order_date` ASC";

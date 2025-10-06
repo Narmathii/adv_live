@@ -484,8 +484,14 @@ class RazerpayController extends BaseController
 				$deliveryMsg = 2;
 				$deliveryStatus = 2;
 
-				$orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,delivery_message = ?,delivery_status = ?,payment_status = ?,payment_method = ? WHERE order_id = ?";
-				$updateData = $db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $razorpay_signature, $orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $payment_method, $orderID]);
+				// Payment request Log
+				$createdAt = time();
+				$dateTime = (new \DateTime("@$createdAt"))
+					->setTimezone(new \DateTimeZone('Asia/Kolkata'))
+					->format('Y-m-d H:i:s');
+
+				$orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,delivery_message = ?,delivery_status = ?,payment_status = ?,payment_method = ? ,order_time = ?  WHERE order_id = ?";
+				$updateData = $db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $razorpay_signature, $orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $payment_method, $dateTime, $orderID]);
 
 				$affectedRows = $db->affectedRows();
 
