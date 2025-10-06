@@ -40,7 +40,13 @@ class DashboardController extends BaseController
         $db = \Config\Database::connect();
         $query =
 
-            "SELECT a.*, b.*, DATE_FORMAT(a.order_date, '%d-%m-%Y') AS date , DATE_FORMAT(a.order_time, '%H:%i:%s') AS order_time ,  DATE_FORMAT(a.delivery_date, '%d-%m-%Y')  AS delivery_date FROM tbl_orders AS a INNER JOIN 
+            "SELECT a.*, b.*, DATE_FORMAT(a.order_date, '%d-%m-%Y') AS date , 
+            CASE
+                WHEN a.order_time IS NULL OR a.order_time = '0000-00-00 00:00:00' THEN '00:00:00'
+                ELSE DATE_FORMAT(a.order_time, '%h:%i %p')
+            END AS order_time,   
+            
+            DATE_FORMAT(a.delivery_date, '%d-%m-%Y')  AS delivery_date FROM tbl_orders AS a INNER JOIN 
             tbl_users AS b ON a.`user_id` = b.user_id
             WHERE a.flag = 1 AND b.flag = 1 AND delivery_status = 4";
         $orderDetail = $db->query($query)->getResultArray();
@@ -83,7 +89,12 @@ class DashboardController extends BaseController
         $db = \Config\Database::connect();
         $query =
 
-            "SELECT a.*, b.*, DATE_FORMAT(a.order_date, '%d-%m-%Y') AS date , DATE_FORMAT(a.order_time, '%H:%i:%s') AS order_time ,  DATE_FORMAT(a.delivery_date, '%d-%m-%Y')  AS delivery_date  FROM tbl_orders AS a INNER JOIN 
+            "SELECT a.*, b.*, DATE_FORMAT(a.order_date, '%d-%m-%Y') AS date , 
+            CASE
+                WHEN a.order_time IS NULL OR a.order_time = '0000-00-00 00:00:00' THEN '00:00:00'
+                ELSE DATE_FORMAT(a.order_time, '%h:%i %p')
+            END AS order_time,   
+            DATE_FORMAT(a.delivery_date, '%d-%m-%Y')  AS delivery_date  FROM tbl_orders AS a INNER JOIN 
             tbl_users AS b ON a.`user_id` = b.user_id
             WHERE a.flag = 1 AND b.flag = 1 AND delivery_status = 5";
         $orderDetail = $db->query($query)->getResultArray();
@@ -128,7 +139,13 @@ class DashboardController extends BaseController
         $db = \Config\Database::connect();
         $query =
 
-            "SELECT a.*, b.*, DATE_FORMAT(a.order_date, '%d-%m-%Y') AS date ,DATE_FORMAT(a.order_time, '%H:%i:%s') AS order_time , DATE_FORMAT(a.delivery_date, '%d-%m-%Y')  AS delivery_date FROM tbl_orders AS a INNER JOIN 
+            "SELECT a.*, b.*, DATE_FORMAT(a.order_date, '%d-%m-%Y') AS date ,
+            CASE
+                WHEN a.order_time IS NULL OR a.order_time = '0000-00-00 00:00:00' THEN '00:00:00'
+                ELSE DATE_FORMAT(a.order_time, '%h:%i %p')
+            END AS order_time, 
+            
+            DATE_FORMAT(a.delivery_date, '%d-%m-%Y')  AS delivery_date FROM tbl_orders AS a INNER JOIN 
             tbl_users AS b ON a.`user_id` = b.user_id
             WHERE a.flag = 1 AND a.delivery_status =  3 AND b.flag = 1
             ORDER BY `order_date` ASC";
@@ -206,7 +223,10 @@ class DashboardController extends BaseController
             a.*,
             b.*,
             DATE_FORMAT(a.order_date, '%d-%m-%Y') AS DATE,
-            DATE_FORMAT(a.order_time, '%H:%i:%s') AS order_time , 
+            CASE
+                WHEN a.order_time IS NULL OR a.order_time = '0000-00-00 00:00:00' THEN '00:00:00'
+                ELSE DATE_FORMAT(a.order_time, '%h:%i %p')
+            END AS order_time,  
           DATE_FORMAT(a.delivery_date, '%d-%m-%Y')  AS deliverydate 
         FROM
             tbl_orders AS a
@@ -266,7 +286,10 @@ class DashboardController extends BaseController
             a.*,
             b.*,
             DATE_FORMAT(a.order_date, '%d-%m-%Y') AS DATE ,
-            DATE_FORMAT(a.order_time, '%H:%i:%s') AS order_time , 
+          CASE
+                WHEN a.order_time IS NULL OR a.order_time = '0000-00-00 00:00:00' THEN '00:00:00'
+                ELSE DATE_FORMAT(a.order_time, '%h:%i %p')
+            END AS order_time, 
           DATE_FORMAT(a.delivery_date, '%d-%m-%Y')  AS delivery_date 
         FROM
             tbl_orders AS a
@@ -333,7 +356,7 @@ class DashboardController extends BaseController
       AND a.delivery_status = 1 
       AND b.flag = 1
       AND c.rzporder_id <> '' AND a.payment_status = 'PENDING'
-    ORDER BY a.order_date ASC";
+    ORDER BY a.log ASC";
         $orderDetail = $db->query($query)->getResultArray();
 
         echo json_encode($orderDetail);

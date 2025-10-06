@@ -34,7 +34,13 @@ class OrderListController extends BaseController
     {
         $db = \Config\Database::connect();
         $query =
-            "SELECT a.*, b.*, DATE_FORMAT(a.order_date, '%d-%m-%Y') AS date ,DATE_FORMAT(a.order_time, '%H:%i:%s') AS order_time ,  DATE_FORMAT(a.delivery_date, '%d-%m-%Y')  AS deliverydate
+            "SELECT a.*, b.*, DATE_FORMAT(a.order_date, '%d-%m-%Y') AS date ,
+             CASE
+                WHEN a.order_time IS NULL OR a.order_time = '0000-00-00 00:00:00' THEN '00:00:00'
+                ELSE DATE_FORMAT(a.order_time, '%h:%i %p')
+            END AS order_time,   
+            
+            DATE_FORMAT(a.delivery_date, '%d-%m-%Y')  AS deliverydate
             FROM tbl_orders AS a INNER JOIN 
             tbl_users AS b ON a.`user_id` = b.user_id
             WHERE a.flag = 1 AND b.flag = 1 AND a.order_status <> 'initiated' AND  a.payment_status <> 'PENDING'";
@@ -763,11 +769,25 @@ class OrderListController extends BaseController
         $db = \Config\Database::connect();
         $filterDate = $this->request->getPost("filter_date");
 
-        $query = "SELECT a.*, b.*, DATE_FORMAT(a.order_date, '%d-%m-%Y') AS date FROM tbl_orders AS a INNER JOIN 
-            tbl_users AS b ON a.`user_id` = b.user_id
-            WHERE a.flag = 1 AND b.flag = 1 AND DATE(a.log)  = ?";
+        $query = "SELECT
+                    a.*,
+                    b.*,
+                    DATE_FORMAT(a.order_date, '%d-%m-%Y') AS DATE,
+                    CASE WHEN a.order_time IS NULL OR a.order_time = '0000-00-00 00:00:00' THEN '00:00:00' ELSE DATE_FORMAT(a.order_time, '%h:%i %p')
+                END AS order_time,
+                CASE WHEN a.`delivery_date` IS NULL OR a.delivery_date = '' THEN '-' ELSE DATE_FORMAT(a.delivery_date, '%d-%m-%Y')
+                END AS deliverydate
+                FROM
+                    tbl_orders AS a
+                INNER JOIN tbl_users AS b
+                ON
+                    a.`user_id` = b.user_id
+                WHERE
+                    a.flag = 1 AND b.flag = 1 AND DATE(a.log) = ?";
 
         $result = $db->query($query, [$filterDate])->getResultArray();
+
+
         echo json_encode($result);
     }
 
