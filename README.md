@@ -1,67 +1,141 @@
-# CodeIgniter 4 Application Starter
+# 🚲 E-Commerce Bike & Accessories Project (MVC)
 
-## What is CodeIgniter?
+## 📌 Project Overview
+This project is a full-featured **E-commerce web application** designed to showcase and sell **bikes and accessories**. It is developed using the **MVC (Model-View-Controller)** architecture, ensuring scalability, maintainability, and clean code structure.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+The system includes both a **user interface (UI)** for customers and a **CRM (Admin Panel)** for managing business operations.
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+---
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## 🏗️ Architecture: MVC Pattern
 
-The user guide corresponding to the latest version of the framework can be found
-[here](https://codeigniter4.github.io/userguide/).
+### 🔹 Model
+- Handles database operations
+- Manages product, user, and order data
+- Implements business logic
 
-## Installation & updates
+### 🔹 View
+- Displays UI components
+- Product listings and details
+- Cart, wishlist, and checkout pages
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+### 🔹 Controller
+- Processes user requests
+- Connects Model and View
+- Handles application logic
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+---
 
-## Setup
+## 🛠️ Core Features
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+### 🛍️ Product & Bike Management
+- Detailed bike specifications
+- Accessories catalog (helmets, gloves, etc.)
+- Category-based organization
+- Product images and descriptions
 
-## Important Change with index.php
+### 📦 CRM (Admin Panel)
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+#### Product Management
+- Add, update, delete products
+- Manage stock and pricing
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+#### Order Management
+- Track and update order status
+- Manage customer orders efficiently
 
-**Please** read the user guide for a better explanation of how CI4 works!
+#### Customer Management
+- Store customer details
+- View order history
 
-## Repository Management
+#### Courier Charges Management
+- Configure delivery charges dynamically
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+---
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+## 🛒 Shopping Features
 
-## Server Requirements
+### 🧺 Cart System
+- Add/remove items
+- Update product quantities
+- Dynamic total calculation
 
-PHP version 7.4 or higher is required, with the following extensions installed:
+### ❤️ Wishlist
+- Save items for future purchase
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+### 👀 Recently Viewed
+- Displays recently viewed products
 
-> **Warning**
-> The end of life date for PHP 7.4 was November 28, 2022. If you are
-> still using PHP 7.4, you should upgrade immediately. The end of life date
-> for PHP 8.0 will be November 26, 2023.
+### 🎁 Offers & Discounts
+- Apply coupon codes
+- Display promotional offers
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+---
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+## 🔐 Security Features
+
+### 📱 Two-Factor Authentication (2FA)
+- OTP-based login using SMS Gateway
+- Enhances user account security
+
+---
+
+## 💳 Payment Integration
+
+### 💰 Razorpay Payment Gateway
+- Secure payment processing
+- Supports:
+  - UPI
+  - Credit/Debit Cards
+  - Net Banking
+
+---
+
+## 🎨 User Interface (UI)
+- Responsive design (mobile-friendly)
+- Clean and intuitive layout
+- Easy navigation
+- Interactive shopping experience
+
+---
+
+## 🔄 Additional Features
+- User authentication (Login/Register)
+- Product search and filters
+- Order tracking system
+- Dynamic content rendering
+
+---
+
+## 🚀 Technologies Used
+- **Frontend**: HTML, CSS, JavaScript
+- **Backend**: MVC Framework (e.g., ASP.NET / Node.js / Java)
+- **Database**: MySQL / SQL Server
+- **APIs**:
+  - SMS Gateway API (for OTP)
+  - Razorpay API (for payments)
+
+---
+
+## 📈 Future Enhancements
+- AI-based product recommendations
+- Mobile app support
+- Advanced analytics dashboard
+- Multi-vendor support
+
+---
+
+## 📂 Project Modules
+- User Module
+- Admin (CRM) Module
+- Product Management
+- Order Management
+- Payment Integration
+- Authentication System
+
+---
+
+## ✅ Conclusion
+This project demonstrates a complete **MVC-based E-commerce solution** with integrated CRM, secure authentication, and seamless payment processing. It provides a smooth shopping experience for users and powerful management tools for administrators.
+
+---
